@@ -1,5 +1,8 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito+Sans&display=swap');
+
 html {
   height: 100vh;
+  width: 100vw;
 }
 
 body {
@@ -7,7 +10,8 @@ body {
   margin: 0px;
   padding: 0px;
   height: 100%;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+  width: 100%;
+  font-family: 'Nunito Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -19,4 +23,5 @@ body {
   margin: 0px;
   padding: 0px;
   height: 100%;
+  width: 100%;
 }

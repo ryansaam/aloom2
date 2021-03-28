@@ -4,6 +4,9 @@ import './App.css'
 
 import InitContent from "./components/InitContent"
 import BackgroundVideo from "./components/BackgroundVideo"
+import ContentBlock from "./components/ContentBlock"
+import ContentBlockP from "./components/ContentBlockP"
+import ProfileCard from "./components/ProfileCard"
 
 import companyBackground from "./assets/aloom_company_background.mp4"
 import productBackground from "./assets/aloom_product_background.mp4"
@@ -143,7 +146,7 @@ function App() {
             </div>
           </ContentBlock>
           <ContentBlock top={"-100%"} heading={"Founders"} backgroundColor={"red"}>
-            <div style={{display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "40px"}} ref={foundersRef}>
+            <div className="profiles" ref={foundersRef}>
               <ProfileCard
                 name={"Samim Safaei"}
                 title={"CEO"}
@@ -173,7 +176,7 @@ function App() {
             </div>
           </ContentBlock>
           <ContentBlock top={"-200%"} heading={"Advisors"} backgroundColor={"magenta"}>
-            <div style={{display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "40px"}} ref={advisorsRef}>
+            <div className="profiles" ref={advisorsRef}>
               <ProfileCard
                 name={"Will Mills"}
                 title={"Advisor A"}
@@ -239,7 +242,7 @@ function App() {
             </div>
           </ContentBlock>
         </div>
-        
+
       </div>
       
       <div ref={initContentContainerRef} style={{
@@ -256,74 +259,7 @@ function App() {
   )
 }
 
-interface ContentBlockProps {
-  backgroundColor: string
-  top?: string
-  height?: string
-  heading: string
-  children: React.ReactNode
-}
-const ContentBlock = ({ backgroundColor, top, height, children }: ContentBlockProps) => {
-  return (
-    <div style={{
-      //backgroundColor: backgroundColor,
-      width: "100%",
-      height: height || "250%",
-      position: "relative",
-      top: top
-    }}>
-      <div style={{
-        width: "100%",
-        height: "100vh",
-        display: "grid",
-        justifyItems: "center",
-        alignItems: "center",
-        position: "sticky",
-        top: "0%",
-        boxSizing: "border-box",
-        padding: "40px"
-      }}>
-        { children }
-      </div>
-    </div>
-  )
-}
 
-interface ContentBlockPProps {
-  opacity?: number,
-  children: React.ReactNode
-}
-const ContentBlockP = ({ opacity, children }: ContentBlockPProps) => {
-  return (
-    <p className="contentBlockP" style={{margin: "20px 0px", opacity: opacity}}>{ children }</p>
-  )
-}
 
-interface ProfileCardProps {
-  imgSrc?: string
-  imgAlt?: string
-  name: string
-  title: string
-  desc: string
-}
-const ProfileCard = ({ imgSrc, imgAlt, name, title, desc }: ProfileCardProps) => {
-  return (
-    <div style={{
-      backgroundColor: "#090909",
-      width: "300px",
-      height: "480px",
-      boxSizing: "border-box",
-      padding: "20px",
-      borderRadius: "20px"
-    }}>
-      <div style={{backgroundColor: "white", width: "calc(300px - 40px)", height: "calc(300px - 40px)"}}>
-        <img style={{width: "100%"}} src={imgSrc} alt={imgAlt} />
-      </div>
-      <h1 style={{color: "#fafafa", margin: "10px 0px 0px 0px", fontSize: "24px"}}>{ name }</h1>
-      <h1 style={{color: "#fafafa", margin: "0px 0px 10px 0px", fontSize: "24px"}}>{ title }</h1>
-      <p style={{color: "#fafafa", fontSize: "18px", boxSizing: "border-box"}}>{ desc }</p>
-    </div>
-  )
-}
 
 export default App
