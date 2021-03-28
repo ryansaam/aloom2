@@ -12,6 +12,7 @@ const LandingPage = ({ startTransition }: LandingPageProps) => {
 
   useEffect(() => {
     const scrollHandler = () => {
+      console.log("scroll hit")
       const vid = videoRef!.current!
       vid.loop = false
 
@@ -28,7 +29,8 @@ const LandingPage = ({ startTransition }: LandingPageProps) => {
       window.removeEventListener("scroll", scrollHandler)
     }
 
-    window.addEventListener("scroll", scrollHandler)
+    setTimeout(() => window.addEventListener("scroll", scrollHandler), 1000)
+    
   }, [])
 
   return (

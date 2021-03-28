@@ -1,7 +1,27 @@
 .App {
   background-color: black;
-  height: 100%;
+  height: calc(100% + 1px);
   position: relative;
+}
+
+p {
+  margin: 0px;
+}
+
+.contentBlockP {
+  color: white;
+  font-size: 28px;
+  font-weight: 600;
+  margin: auto;
+}
+@media (max-width: 400px) {
+  .contentBlockP {
+    font-size: 24px;
+  }
+}
+
+.ScrollLimit {
+  overflow: hidden;
 }
 
 .glow-effect {

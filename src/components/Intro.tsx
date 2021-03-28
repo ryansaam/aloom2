@@ -7,8 +7,9 @@ import LandingPage from "./LandingPage"
 
 interface IntroProps {
   startTransition: () => void
+  handleScroll: () => void
 }
-const Intro = ({ startTransition }: IntroProps) => {
+const Intro = ({ startTransition, handleScroll }: IntroProps) => {
   const landingPageContainerRef = useRef<HTMLDivElement>(null)
   const diveVideoRef = useRef<HTMLVideoElement>(null)
 
@@ -41,14 +42,13 @@ const Intro = ({ startTransition }: IntroProps) => {
       </div>
       <div ref={landingPageContainerRef} style={{
         width: "100%",
-        height: "calc(100% + 1px)",
+        height: "100%",
         position: "absolute",
         top: "0px",
         left: "0px"
       }} >
         <LandingPage startTransition={() => {
-          disableScroll.on()
-          window.scrollTo(0, 0)
+          handleScroll()
           landingPageContainerRef!.current!.style.display = "none"
           diveVideoRef!.current!.play()
           listenForVideoEnd()
