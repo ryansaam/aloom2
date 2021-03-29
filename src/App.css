@@ -1,5 +1,4 @@
 .App {
-  background-color: black;
   height: calc(100% + 1px);
   position: relative;
 }

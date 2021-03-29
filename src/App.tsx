@@ -11,7 +11,14 @@ import ProfileCard from "./components/ProfileCard"
 import companyBackground from "./assets/aloom_company_background.mp4"
 import productBackground from "./assets/aloom_product_background.mp4"
 
+import demoVideo from "./assets/demo_video.mp4"
+
 import ryansam from "./assets/ryansam_profile.jpeg"
+import samim from "./assets/samim.jpeg"
+import shin from "./assets/shin_headshot.png"
+import sean from "./assets/sean_mcgrail.jpeg"
+import will from "./assets/will_mills.jpeg"
+import dr_sean from "./assets/dr_sean.jpg"
 // TODO: Line up background videos and build scroll to seek function
 
 
@@ -31,6 +38,12 @@ function App() {
   const dnaRef = useRef<HTMLDivElement>(null)
   const foundersRef = useRef<HTMLDivElement>(null)
   const advisorsRef = useRef<HTMLDivElement>(null)
+  const overviewRef = useRef<HTMLDivElement>(null)
+  const demoRef = useRef<HTMLDivElement>(null)
+  const signUpRef = useRef<HTMLDivElement>(null)
+  const synesthesiaRef = useRef<HTMLDivElement>(null)
+  const productLinksRef = useRef<HTMLDivElement>(null)
+  const backTopSurfaceRef = useRef<HTMLDivElement>(null)
   ///////////////////////
 
   const initVideo = (type: string) => {
@@ -45,6 +58,15 @@ function App() {
   }
 
   const handleInitContent = (location: string) => {
+    dnaRef!.current!.style.opacity = "0.0"
+    overviewRef!.current!.style.opacity = "0.0"
+    setTimeout(() => {
+      dnaRef!.current!.style.transition = "opacity 300ms linear"
+      overviewRef!.current!.style.transition = "opacity 300ms linear"
+      dnaRef!.current!.style.opacity = "1.0"
+      overviewRef!.current!.style.opacity = "1.0"
+    }, 300) 
+
     disableScroll.off()
     masterRef!.current!.className = "App"
     window.scrollTo(0,0)
@@ -83,25 +105,68 @@ function App() {
       frameNumber = (window.pageYOffset / playbackConst) + 30;
       console.log(frameNumber)
 
-      if (frameNumber >= 42) {
-        dnaRef!.current!.style.display = "none"
+      if (location === "company") {
+        if (frameNumber >= 42) {
+          dnaRef!.current!.style.display = "none"
+        } else {
+          dnaRef!.current!.style.display = "block"
+        }
+  
+        if (frameNumber < 42 || frameNumber >= 63) {
+          foundersRef!.current!.style.display = "none"
+        } else {
+          foundersRef!.current!.style.display = "grid"
+          foundersRef!.current!.style.opacity = `${(1 / (63 - 49)) * (frameNumber - 49)}`
+        }
+  
+        if (frameNumber < 70 || frameNumber >= 84) {
+          advisorsRef!.current!.style.display = "none"
+        } else {
+          advisorsRef!.current!.style.display = "grid"
+          advisorsRef!.current!.style.opacity = `${(1 / (84 - 70)) * (frameNumber - 70)}`
+        }
       } else {
-        dnaRef!.current!.style.display = "block"
-      }
+        if (frameNumber >= 42) {
+          overviewRef!.current!.style.display = "none"
+        } else {
+          overviewRef!.current!.style.display = "block"
+        }
+  
+        if (frameNumber < 42 || frameNumber >= 63) {
+          demoRef!.current!.style.display = "none"
+        } else {
+          demoRef!.current!.style.display = "grid"
+          demoRef!.current!.style.opacity = `${(1 / (63 - 49)) * (frameNumber - 49)}`
+        }
+  
+        if (frameNumber < 70 || frameNumber >= 84) {
+          signUpRef!.current!.style.display = "none"
+        } else {
+          signUpRef!.current!.style.display = "grid"
+          signUpRef!.current!.style.opacity = `${(1 / (84 - 70)) * (frameNumber - 70)}`
+        }
 
-      if (frameNumber < 42 || frameNumber >= 63) {
-        foundersRef!.current!.style.display = "none"
-      } else {
-        foundersRef!.current!.style.display = "grid"
-        foundersRef!.current!.style.opacity = `${(1 / (63 - 49)) * (frameNumber - 49)}`
-      }
+        if (frameNumber < 92 || frameNumber >= 104) {
+          synesthesiaRef!.current!.style.display = "none"
+        } else {
+          synesthesiaRef!.current!.style.display = "grid"
+          synesthesiaRef!.current!.style.opacity = `${(1 / (104 - 92)) * (frameNumber - 92)}`
+        }
 
-      if (frameNumber < 70 || frameNumber >= 84) {
-        advisorsRef!.current!.style.display = "none"
-      } else {
-        advisorsRef!.current!.style.display = "grid"
-        advisorsRef!.current!.style.opacity = `${(1 / (84 - 70)) * (frameNumber - 70)}`
+        if (frameNumber < 118 || frameNumber >= 126) {
+          productLinksRef!.current!.style.display = "none"
+        } else {
+          productLinksRef!.current!.style.display = "grid"
+          productLinksRef!.current!.style.opacity = `${(1 / (126 - 118)) * (frameNumber - 118)}`
+        }
+
+        if (frameNumber < 127) {
+          backTopSurfaceRef!.current!.style.display = "none"
+        } else {
+          backTopSurfaceRef!.current!.style.display = "grid"
+        }
       }
+      
 
       if (vid.readyState !== 1) {
         vid.currentTime = frameNumber;
@@ -129,10 +194,11 @@ function App() {
           top: "0px",
           left: "0px",
         }}>
-          <ContentBlock height={"194%"} top={"0%"} heading={"DNA"} backgroundColor={"blue"}>
+          <ContentBlock height={"194%"} top={"0%"} heading={"DNA"}>
             <div ref={dnaRef}>
               <ContentBlockP>We help people feel more.</ContentBlockP>
-              <ContentBlockP opacity={0.8}>By visualizing the emotion in audio, we make multimedia more engaging.</ContentBlockP>
+              <p className="contentBlockP" style={{margin: "20px 0px 0px 0px", opacity: 0.8}}>By visualizing the emotion in audio,</p>
+              <p className="contentBlockP" style={{margin: "0px 0px 20px 0px", opacity: 0.8}}>we make multimedia more engaging.</p>
               <ContentBlockP opacity={0.6}>Ultimately, we are pioneering human perception technologies.</ContentBlockP>
               <div style={{
                 width: "100%",
@@ -145,17 +211,19 @@ function App() {
               </div>
             </div>
           </ContentBlock>
-          <ContentBlock top={"-100%"} heading={"Founders"} backgroundColor={"red"}>
+          <ContentBlock top={"-100%"} heading={"Founders"}>
             <div className="profiles" ref={foundersRef}>
               <ProfileCard
+                imgSrc={samim}
                 name={"Samim Safaei"}
                 title={"CEO"}
                 desc={"An experienced engineer, product manager and founder; striving to spread the power of immersive audio-visual experiences."}
               />
               <ProfileCard
+                imgSrc={shin}
                 name={"Shin Nagpal"}
                 title={"COO"}
-                desc={"A manufacturing expert with practical experience scaling audio hardware OEMs; he creates high-quality products that offer unique value."}
+                desc={"A manufacturing expert with practical experience scaling audio hardware OEMs; he creates high-quality products with unique value."}
               />
               <ProfileCard
                 imgSrc={ryansam}
@@ -175,22 +243,25 @@ function App() {
               </div>
             </div>
           </ContentBlock>
-          <ContentBlock top={"-200%"} heading={"Advisors"} backgroundColor={"magenta"}>
+          <ContentBlock top={"-200%"} heading={"Advisors"}>
             <div className="profiles" ref={advisorsRef}>
               <ProfileCard
+                imgSrc={will}
                 name={"Will Mills"}
-                title={"Advisor A"}
-                desc={"seasoned music industry professional, former VP of Shazam, Founder of Dynamic Music (acq’d); he advises startups in the music tech space."}
+                title={""}
+                desc={"A seasoned music industry professional, former VP of Shazam, Founder of Dynamic Music (acq’d); he advises music tech startups."}
               />
               <ProfileCard
+                imgSrc={sean}
                 name={"Sean McGrail"}
-                title={"Advisor Founder"}
+                title={""}
                 desc={"President of Paint-Nite (acq’d), Managing Director of a seed fund; he advises startups in the artistic space."}
               />
               <ProfileCard
+                imgSrc={dr_sean}
                 name={"Dr. Sean A. Day"}
-                title={"Advisor Founder"}
-                desc={"Advisor A pioneer in the field of synesthesia research; he is an author, professor, & president of the largest synesthete group in the world, the IASAS."}
+                title={""}
+                desc={"A pioneer of synesthesia research; he is an author, professor, & president of the largest synesthete group globaly, the IASAS."}
               />
               <div style={{
                 width: "100%",
@@ -212,24 +283,84 @@ function App() {
           top: "0px",
           left: "0px",
         }}>
-          <ContentBlock heading={"Overview"} backgroundColor={"green"}>
-            <div>
-              <ContentBlockP>“Audio Illuminated”</ContentBlockP>
-              <ContentBlockP opacity={0.8}>
+          <ContentBlock height={"194%"} top={"0%"} heading={"Overview"}>
+            <div ref={overviewRef}>
+              <div style={{
+                width: "100%",
+                position: "absolute",
+                top: "0px",
+                left: "0px",
+                marginTop: "60px"
+              }}>
+                <h1 style={{color: "white", fontSize: "42px", textAlign: "center", margin: "0px"}}>“Audio Illuminated”</h1>
+              </div>
+              <ContentBlockP>
                 Our smart light visualizes the emotion in audio to create more engaging experiences, controlled by our app.
               </ContentBlockP>
-              <ContentBlockP opacity={0.6}>
+              <ContentBlockP opacity={0.8}>
                 Using neuroscience, we create content-tailored visual ambiance. This multi-sensory immersion helps you feel more connected to the moment.
               </ContentBlockP>
+              <div style={{
+                width: "100%",
+                position: "absolute",
+                bottom: "0px",
+                left: "0px",
+                marginBottom: "60px"
+              }}>
+                <h1 style={{color: "white", textAlign: "center", margin: "0px"}}>Overview</h1>
+              </div>
             </div>
           </ContentBlock>
-          <ContentBlock heading={"Demo"} backgroundColor={"yellow"}>
-            <div>
-              
+          <ContentBlock zIndex={10} top={"-100%"} heading={"Demo"}>
+            <div style={{width: "100%", height: "100%", display: "grid", justifyItems: "center"}} ref={demoRef}>
+
+              <video
+                style={{outline: "none", marginTop: "10%"}}
+                height="40%"
+                tabIndex={0}
+                playsInline
+                controls
+                onLoadedData={() => {disableScroll.off()}}
+              >
+                <source type="video/mp4" src={demoVideo} />
+              </video>
+
+
+              <div style={{
+                width: "100%",
+                position: "absolute",
+                bottom: "0px",
+                left: "0px",
+                marginBottom: "60px"
+              }}>
+                <h1 style={{color: "white", textAlign: "center", margin: "0px"}}>Demo</h1>
+              </div>
             </div>
           </ContentBlock>
-          <ContentBlock heading={"Tech"} backgroundColor={"orange"}>
-            <div>
+          <ContentBlock top={"-200%"} heading={"Tech"}>
+            <div style={{justifyItems: "center", alignItems: "center"}} ref={signUpRef}>
+              <ContentBlockP>
+                Be among the first to experience aloom:
+              </ContentBlockP>
+              <div style={{backgroundColor: "black", width: "340px", marginBottom: "20px", borderRadius: "20px"}}>
+                <p style={{color: "white", padding: "20px"}}>Beta-testing for creators (Coming Soon)</p>
+              </div>
+              <div style={{backgroundColor: "black", width: "340px", borderRadius: "20px"}}>
+                <p style={{color: "white", padding: "20px"}}>Customer pre-orders (Coming Soon)</p>
+              </div>
+              <div style={{
+                width: "100%",
+                position: "absolute",
+                bottom: "0px",
+                left: "0px",
+                marginBottom: "60px"
+              }}>
+                <h1 style={{color: "white", textAlign: "center", margin: "0px"}}>Sign Up</h1>
+              </div>
+            </div>
+          </ContentBlock>
+          <ContentBlock top={"-300%"} heading={"Tech"}>
+            <div ref={synesthesiaRef}>
               <ContentBlockP>
                 The magic of our platform comes from the neurological condition of Synesthesia; where your senses mix & trigger each other, like seeing sounds.
               </ContentBlockP>
@@ -239,6 +370,144 @@ function App() {
               <ContentBlockP opacity={0.6}>
                 Best of all, it’s not just genetic and can be learned. We’ve coded this natural mechanism along with customization tools, for communal creativity towards collective transcendence.
               </ContentBlockP>
+              <div style={{
+                width: "100%",
+                position: "absolute",
+                bottom: "0px",
+                left: "0px",
+                marginBottom: "60px"
+              }}>
+                <h1 style={{color: "white", textAlign: "center", margin: "0px"}}>Synesthesia</h1>
+              </div>
+            </div>
+          </ContentBlock>
+          <ContentBlock top={"-400%"} heading={"Tech"}>
+          <div style={{justifyItems: "center", alignItems: "center"}} ref={productLinksRef}>
+              <div style={{display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "20px"}}>
+                <div style={{backgroundColor: "black", width: "340px", borderRadius: "20px"}}>
+                  <a
+                    href="https://thepsychologist.bps.org.uk/volume-28/february-2015/surprising-world-synaesthesia"
+                    target="_blank"
+                    rel="noreferrer"
+                    style={{textDecoration: "none"}}
+                  >
+                    <p style={{color: "white", padding: "20px"}}>The surprising world of Synesthesia</p>
+                  </a>
+                </div>
+                <div style={{backgroundColor: "black", width: "340px", borderRadius: "20px"}}>
+                  <a
+                    href="https://www.ingentaconnect.com/content/fmea/rpme/2019/00000020/00000001/art00005"
+                    target="_blank"
+                    rel="noreferrer"
+                    style={{textDecoration: "none"}}
+                  >
+                    <p style={{color: "white", padding: "20px"}}>Pitch-Perfect Chromesthesia</p>
+                  </a>
+                </div>
+                <div style={{backgroundColor: "black", width: "340px", borderRadius: "20px"}}>
+                  <a
+                    href="https://digitalcommons.iwu.edu/psych_honproj/198/"
+                    target="_blank"
+                    rel="noreferrer"
+                    style={{textDecoration: "none"}}
+                  >
+                    <p style={{color: "white", padding: "20px"}}>Can Synesthesia be learned?</p>
+                  </a>
+                </div>
+                <div style={{backgroundColor: "black", width: "340px", borderRadius: "20px"}}>
+                  <a
+                    href="https://www.sciencedirect.com/science/article/abs/pii/S0028393216301130"
+                    target="_blank"
+                    rel="noreferrer"
+                    style={{textDecoration: "none"}}
+                  >
+                    <p style={{color: "white", padding: "20px"}}>Synesthesia via LSD</p>
+                  </a>
+                </div>
+                <div style={{backgroundColor: "black", width: "340px", borderRadius: "20px"}}>
+                  <a
+                    href="https://www.psychologytoday.com/us/blog/sensorium/201203/synesthetes-people-the-future"
+                    target="_blank"
+                    rel="noreferrer"
+                    style={{textDecoration: "none"}}
+                  >
+                    <p style={{color: "white", padding: "20px"}}>Pharrell talks about his Synesthesia</p>
+                  </a>
+                </div>
+                <div style={{backgroundColor: "black", width: "340px", borderRadius: "20px"}}>
+                  <a
+                    href="https://www.youtube.com/watch?v=E6pcgv-SkPQ"
+                    target="_blank"
+                    rel="noreferrer"
+                    style={{textDecoration: "none"}}
+                  >
+                    <p style={{color: "white", padding: "20px"}}>Billie Eilish: Synesthesia in her process</p>
+                  </a>
+                </div>
+                <div style={{backgroundColor: "black", width: "340px", borderRadius: "20px"}}>
+                  <a
+                    href="https://www.youtube.com/watch?v=EyZg-FDTMxc"
+                    target="_blank"
+                    rel="noreferrer"
+                    style={{textDecoration: "none"}}
+                  >
+                    <p style={{color: "white", padding: "20px"}}>Lorde: how Synesthesia inspires her</p>
+                  </a>
+                </div>
+                <div style={{backgroundColor: "black", width: "340px", borderRadius: "20px"}}>
+                  <a
+                    href="https://www.youtube.com/watch?t=1s&v=88s6guf9egs"
+                    target="_blank"
+                    rel="noreferrer"
+                    style={{textDecoration: "none"}}
+                  >
+                    <p style={{color: "white", padding: "20px"}}>TEDx: “Seeing Sound” Annie Dickinson</p>
+                  </a>
+                </div>
+                <div style={{backgroundColor: "black", width: "340px", borderRadius: "20px"}}>
+                  <a
+                    href="https://pitchfork.com/thepitch/229-what-the-hell-is-synesthesia-and-why-does-every-musician-seem-to-have-it/"
+                    target="_blank"
+                    rel="noreferrer"
+                    style={{textDecoration: "none"}}
+                  >
+                    <p style={{color: "white", padding: "20px"}}>Pitchfork: Every musician has Synesthesia</p>
+                  </a>
+                </div>
+                <div style={{backgroundColor: "black", width: "340px", borderRadius: "20px", gridColumn: "2/3"}}>
+                  <a
+                    href="https://synesthesia.com/blog/synesthesia-tests/"
+                    target="_blank"
+                    rel="noreferrer"
+                    style={{textDecoration: "none"}}
+                  >
+                    <p style={{color: "white", padding: "20px"}}>Do you have synesthesia? Take a quiz!</p>
+                  </a>
+                </div>
+              </div>
+              <div style={{
+                width: "100%",
+                position: "absolute",
+                bottom: "0px",
+                left: "0px",
+                marginBottom: "60px"
+              }}>
+                <h1 style={{color: "white", textAlign: "center", margin: "0px"}}>Explore</h1>
+              </div>
+            </div>
+          </ContentBlock>
+          <ContentBlock top={"-550%"} heading={"Tech"}>
+            <div ref={backTopSurfaceRef}>
+              <button onClick={() => { window.location.reload() }} style={{
+                backgroundColor: "black",
+                color: "white",
+                fontWeight: 600,
+                width: "150px",
+                height: "40px",
+                outline: "none",
+                border: "none",
+                borderRadius: "10px"
+              }}>Back To Suface</button>
             </div>
           </ContentBlock>
         </div>

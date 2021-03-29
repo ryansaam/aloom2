@@ -1,4 +1,5 @@
 import React, { useRef } from 'react'
+import '../App.css'
 
 import Intro from "./Intro"
 import diveVideo from "../assets/aloom_dive.mp4"
@@ -14,14 +15,55 @@ interface InitContentProps {
 const InitContent = ({ startTransition, handleScroll }: InitContentProps) => {
   const companyVideoRef = useRef<HTMLVideoElement>(null)
   const productVideoRef = useRef<HTMLVideoElement>(null)
-  const introContainerRef = useRef<HTMLDivElement>(null)
   const diveVideoRef = useRef<HTMLVideoElement>(null)
-  const companyBtnRef = useRef<HTMLDivElement>(null)
-  const productBtnRef = useRef<HTMLDivElement>(null)
+  const introContainerRef = useRef<HTMLDivElement>(null)
   const companyContainerRef = useRef<HTMLDivElement>(null)
   const productContainerRef = useRef<HTMLDivElement>(null)
+  const diveContainerRef = useRef<HTMLDivElement>(null)
+
+  
+  const introContentRef = useRef<HTMLDivElement>(null)
+  const companyBtnRef = useRef<HTMLDivElement>(null)
+  const productBtnRef = useRef<HTMLDivElement>(null)
+
+
+  const fadeContentIn = () => {
+    const companyBtn = companyBtnRef!.current!
+    const productBtn = productBtnRef!.current!
+    const introContent = introContentRef!.current!
+    const diveVideo = diveVideoRef!.current!
+
+    companyBtn.style.transition = "opacity 300ms linear"
+    productBtn.style.transition = "opacity 300ms linear"
+    introContent.style.transition = "opacity 300ms linear"
+    companyBtn.style.opacity = "0.6"
+    productBtn.style.opacity = "0.6"
+    introContent.style.opacity = "1.0"
+
+    setTimeout(() => {
+      companyBtn.className = "hover-up-effect"
+      productBtn.className = "hover-down-effect"
+      diveVideo.className = "glow-effect"
+    }, 300)
+  }
+
+  const fadeContentOutTo = (location: string) => {
+    const companyBtn = companyBtnRef!.current!
+    const productBtn = productBtnRef!.current!
+    const introContent = introContentRef!.current!
+
+    companyBtn.style.transition = "opacity 2s linear"
+    productBtn.style.transition = "opacity 2s linear"
+    introContent.style.transition = "opacity 2s linear"
+    companyBtn.style.opacity = "0.0"
+    productBtn.style.opacity = "0.0"
+    introContent.style.opacity = "0.0"
+
+    transitionTo(location)
+  }
 
   const transitionTo = (location: string) => {
+    diveContainerRef!.current!.style.backgroundColor = ""
     diveVideoRef!.current!.style.display = "none"
     if (location === "company") {
       productContainerRef!.current!.style.display = "none"
@@ -73,7 +115,8 @@ const InitContent = ({ startTransition, handleScroll }: InitContentProps) => {
         }}>
           <BackgroundVideo scale={0.8} ref={productVideoRef} src={productTransition} onLoadedData={() => {  }} />
         </div>
-        <div style={{
+        <div ref={diveContainerRef} style={{
+          backgroundColor: "black",
           width: "100%",
           height: "100%",
           position: "absolute",
@@ -96,18 +139,18 @@ const InitContent = ({ startTransition, handleScroll }: InitContentProps) => {
         }}>
           <TransitionButton
             ref={companyBtnRef}
-            className="hover-up-effect"
             onClick={() => {
-              transitionTo("company")
+              fadeContentOutTo("company")
             }}
           >Company</TransitionButton>
 
-          <div style={{
+          <div ref={introContentRef} style={{
             color: "white",
             fontSize: "28px",
             fontWeight: 600,
             boxSizing: "border-box",
-            padding: "40px"
+            padding: "40px",
+            opacity: "0.0"
           }}>
             <p className="contentBlockP" style={{margin: "20px 0px"}}>
               Aloom makes multimedia immersive.
@@ -122,9 +165,9 @@ const InitContent = ({ startTransition, handleScroll }: InitContentProps) => {
 
           <TransitionButton
             ref={productBtnRef}
-            className="hover-down-effect"
+            bottom
             onClick={() => {
-              transitionTo("product")
+              fadeContentOutTo("product")
             }}
           >Product</TransitionButton>
         </div>
@@ -138,7 +181,12 @@ const InitContent = ({ startTransition, handleScroll }: InitContentProps) => {
         top: "0px",
         left: "0px"
       }}>
-        <Intro handleScroll={() => { handleScroll() }} startTransition={() => { introContainerRef!.current!.style.display = "none" }} />
+        <Intro handleScroll={() => { handleScroll() }} startTransition={() => {
+          introContainerRef!.current!.style.display = "none"
+          setTimeout(() => {
+            fadeContentIn()
+          }, 1000)
+        }}/>
       </div>
     </div>
   )

@@ -9,13 +9,14 @@ interface BackgroundVideoProps {
   autoPlay?: boolean;
   loop?: boolean
   scale?: number;
+  className?: string
   scaleToViewHeight?: boolean;
   onLoadedData: () => void;
 }
 const BackgroundVideo = React.forwardRef<
   HTMLVideoElement,
   BackgroundVideoProps
->(({ src, autoPlay, loop, scale, scaleToViewHeight, onLoadedData }, ref) => {
+>(({ src, autoPlay, loop, scale, className, scaleToViewHeight, onLoadedData }, ref) => {
   const videoContainerRef = useRef<HTMLDivElement>(null);
   const [metadata, setMetadata] = useState<VideoMetaData>({
     videoWidth: 0,
@@ -55,6 +56,7 @@ const BackgroundVideo = React.forwardRef<
       }}
     >
       <video
+        className={className}
         style={{
           transform: `translate(-${videoTranslateX}px, -${videoTranslateY}px) scale(${
             scale ? scale : 1
@@ -65,6 +67,7 @@ const BackgroundVideo = React.forwardRef<
         tabIndex={0}
         preload="auto"
         muted
+        playsInline
         autoPlay={autoPlay}
         loop={loop}
         onLoadedData={(e) => {

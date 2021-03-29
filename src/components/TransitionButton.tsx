@@ -2,11 +2,12 @@ import React from 'react'
 import "../App.css"
 
 interface TransitionButtonProps {
-  className: string
+  bottom?: boolean
+  className?: string
   onClick: () => void
   children: React.ReactNode
 }
-const TransitionButton = React.forwardRef<HTMLSpanElement, TransitionButtonProps>(({ className, onClick, children }, ref) => {
+const TransitionButton = React.forwardRef<HTMLSpanElement, TransitionButtonProps>(({ bottom, className, onClick, children }, ref) => {
   return (
     <button
       onClick={() => {
@@ -18,7 +19,7 @@ const TransitionButton = React.forwardRef<HTMLSpanElement, TransitionButtonProps
         backgroundColor: "rgba(0,0,0,0)",
         outline: "none",
         border: "none",
-        gridRow: className === "hover-down-effect" ? "3/4" : "1/2"
+        gridRow: bottom ? "3/4" : "1/2"
       }}
     >
       <span className={className} ref={ref} style={{
@@ -26,7 +27,7 @@ const TransitionButton = React.forwardRef<HTMLSpanElement, TransitionButtonProps
         fontWeight: 600,
         letterSpacing: "3px",
         color: "white",
-        opacity: "0.6",
+        opacity: "0.0",
         display: "block"
       }}>{ children }</span>
     </button>

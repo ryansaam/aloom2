@@ -1,20 +1,20 @@
 import React from 'react'
 
 interface ContentBlockProps {
-  backgroundColor: string
   top?: string
   height?: string
+  zIndex?: number
   heading: string
   children: React.ReactNode
 }
-const ContentBlock = ({ backgroundColor, top, height, children }: ContentBlockProps) => {
+const ContentBlock = ({ top, height, zIndex, children }: ContentBlockProps) => {
   return (
     <div style={{
-      //backgroundColor: backgroundColor,
       width: "100%",
       height: height || "250%",
       position: "relative",
-      top: top
+      top: top,
+      zIndex: zIndex
     }}>
       <div style={{
         width: "100%",

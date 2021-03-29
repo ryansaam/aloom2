@@ -2,6 +2,20 @@ import React, { useEffect, useRef } from 'react'
 
 import BackgroundVideo from "./BackgroundVideo"
 import largeLandingPageVideo from "../assets/aloom_landing_page_large.mp4"
+import smallLandingPageVideo from "../assets/aloom_landing_page_small.mp4"
+
+function iOS(): boolean {
+  return [
+    // 'iPad Simulator',
+    // 'iPhone Simulator',
+    // 'iPod Simulator',
+    // 'iPad',
+    'iPhone',
+    'iPod'
+  ].includes(navigator.platform)
+  // iPad on iOS 13 detection
+  // || (navigator.userAgent.includes("Mac") && "ontouchend" in document)
+}
 
 interface LandingPageProps {
   startTransition: () => void
@@ -27,11 +41,13 @@ const LandingPage = ({ startTransition }: LandingPageProps) => {
       }, 10)
 
       window.removeEventListener("scroll", scrollHandler)
+      window.removeEventListener("click", scrollHandler)
     }
 
     setTimeout(() => window.addEventListener("scroll", scrollHandler), 1000)
+    setTimeout(() => window.addEventListener("click", scrollHandler), 1000)
     
-  }, [])
+  }, [startTransition])
 
   return (
     <div style={{
@@ -39,7 +55,7 @@ const LandingPage = ({ startTransition }: LandingPageProps) => {
       height: "100%",
       position: "relative"
     }}>
-      <BackgroundVideo ref={videoRef} autoPlay loop src={largeLandingPageVideo} onLoadedData={() => {}} />
+      <BackgroundVideo ref={videoRef} autoPlay loop src={iOS() ? smallLandingPageVideo : largeLandingPageVideo } onLoadedData={() => {}} />
       <div ref={helperRef} style={{
         position: "absolute",
         top: "0px",
@@ -54,15 +70,15 @@ const LandingPage = ({ startTransition }: LandingPageProps) => {
           backgroundColor: "black",
           borderRadius: "30px",
           display: "table",
-          padding: "10px 16px",
+          padding: "6px 12px",
           marginBottom: "40px"
         }}>
           <span style={{
             color: "white",
-            fontSize: "24px",
+            fontSize: "20px",
             fontWeight: 600,
             letterSpacing: "4px"
-          }}>Scroll Down</span>
+          }}>Dive In</span>
         </div>
       </div>
     </div>

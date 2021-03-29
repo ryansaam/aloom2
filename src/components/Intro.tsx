@@ -1,5 +1,4 @@
 import React, { useRef } from 'react'
-import disableScroll from 'disable-scroll'
 
 import BackgroundVideo from "./BackgroundVideo"
 import DiveVideo from "../assets/aloom_dive.mp4"
@@ -52,6 +51,10 @@ const Intro = ({ startTransition, handleScroll }: IntroProps) => {
           landingPageContainerRef!.current!.style.display = "none"
           diveVideoRef!.current!.play()
           listenForVideoEnd()
+          console.log(diveVideoRef!.current!.duration)
+          setTimeout(() => {
+            diveVideoRef!.current!.style.opacity = "0.0"
+          }, 6.101333 * 1000)
         }} />
       </div>
     </div>
