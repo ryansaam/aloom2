@@ -11,7 +11,6 @@ import ProfileCard from "./components/ProfileCard"
 import companyBackground from "./assets/aloom_company_background.mp4"
 import productBackground from "./assets/aloom_product_background.mp4"
 
-import demoVideo from "./assets/demo_video.mp4"
 
 import ryansam from "./assets/ryansam_profile.jpeg"
 import samim from "./assets/samim.jpeg"
@@ -43,7 +42,10 @@ function App() {
   const signUpRef = useRef<HTMLDivElement>(null)
   const synesthesiaRef = useRef<HTMLDivElement>(null)
   const productLinksRef = useRef<HTMLDivElement>(null)
-  const backTopSurfaceRef = useRef<HTMLDivElement>(null)
+  const newsLinksRef = useRef<HTMLDivElement>(null)
+  const backToSurfaceRef = useRef<HTMLDivElement>(null)
+  const backToSurfaceRef2 = useRef<HTMLDivElement>(null)
+  const contactUsRef = useRef<HTMLDivElement>(null)
   ///////////////////////
 
   const initVideo = (type: string) => {
@@ -125,6 +127,26 @@ function App() {
           advisorsRef!.current!.style.display = "grid"
           advisorsRef!.current!.style.opacity = `${(1 / (84 - 70)) * (frameNumber - 70)}`
         }
+
+        if (frameNumber < 92 || frameNumber >= 104) {
+          newsLinksRef!.current!.style.display = "none"
+        } else {
+          newsLinksRef!.current!.style.display = "grid"
+          newsLinksRef!.current!.style.opacity = `${(1 / (104 - 92)) * (frameNumber - 92)}`
+        }
+
+        if (frameNumber < 118 || frameNumber >= 126) {
+          contactUsRef!.current!.style.display = "none"
+        } else {
+          contactUsRef!.current!.style.display = "grid"
+          contactUsRef!.current!.style.opacity = `${(1 / (126 - 118)) * (frameNumber - 118)}`
+        }
+
+        if (frameNumber < 127) {
+          backToSurfaceRef2!.current!.style.display = "none"
+        } else {
+          backToSurfaceRef2!.current!.style.display = "grid"
+        }
       } else {
         if (frameNumber >= 42) {
           overviewRef!.current!.style.display = "none"
@@ -161,9 +183,9 @@ function App() {
         }
 
         if (frameNumber < 127) {
-          backTopSurfaceRef!.current!.style.display = "none"
+          backToSurfaceRef!.current!.style.display = "none"
         } else {
-          backTopSurfaceRef!.current!.style.display = "grid"
+          backToSurfaceRef!.current!.style.display = "grid"
         }
       }
       
@@ -274,6 +296,141 @@ function App() {
               </div>
             </div>
           </ContentBlock>
+
+          <ContentBlock top={"-300%"} heading={"News"}>
+            <div style={{justifyItems: "center", alignItems: "center"}} ref={newsLinksRef}>
+              <div style={{
+                width: "100%",
+                position: "absolute",
+                top: "0px",
+                left: "0px",
+                marginTop: "60px"
+              }}>
+                <h1 style={{color: "white", textAlign: "center", margin: "0px"}}>Explore Synesthesia</h1>
+              </div>
+              <div style={{display: "grid", gridTemplateColumns: "1fr 1fr", gap: "20px"}}>
+                <div style={{backgroundColor: "black", width: "340px", borderRadius: "20px"}}>
+                  <a
+                    href="https://aloom.medium.com/aloom-inated-2b6ac871172f"
+                    target="_blank"
+                    rel="noreferrer"
+                    style={{textDecoration: "none"}}
+                  >
+                    <p style={{color: "white", padding: "20px"}}>Blog 5: “aloom-inated”</p>
+                  </a>
+                </div>
+                <div style={{backgroundColor: "black", width: "340px", borderRadius: "20px"}}>
+                  <a
+                    href="https://medium.com/@synaesthetic/synesthesia-to-day-1210d0e2858b"
+                    target="_blank"
+                    rel="noreferrer"
+                    style={{textDecoration: "none"}}
+                  >
+                    <p style={{color: "white", padding: "20px"}}>Blog 4: “Synesthesia, To-day”</p>
+                  </a>
+                </div>
+                <div style={{backgroundColor: "black", width: "340px", borderRadius: "20px"}}>
+                  <a
+                    href="https://www.mondo.nyc/2020-panels/hot-musictech-startups"
+                    target="_blank"
+                    rel="noreferrer"
+                    style={{textDecoration: "none"}}
+                  >
+                    <p style={{color: "white", padding: "20px"}}>Aloom (synaesthetic) on the Mondo NYC Hot Startup Panel</p>
+                  </a>
+                </div>
+                <div style={{backgroundColor: "black", width: "340px", borderRadius: "20px"}}>
+                  <a
+                    href="https://medium.com/@synaesthetic/the-untold-history-of-synesthesia-music-e13774272d1c"
+                    target="_blank"
+                    rel="noreferrer"
+                    style={{textDecoration: "none"}}
+                  >
+                    <p style={{color: "white", padding: "20px"}}>Blog 3: “The Untold History of Synesthesia & Music”</p>
+                  </a>
+                </div>
+                <div style={{backgroundColor: "black", width: "340px", borderRadius: "20px"}}>
+                  <a
+                    href="https://musically.com/2020/09/18/startup-synaesthetic-seeks-artists-for-immersive-music/"
+                    target="_blank"
+                    rel="noreferrer"
+                    style={{textDecoration: "none"}}
+                  >
+                    <p style={{color: "white", padding: "20px"}}>Aloom calls on musicians for its beta-testing program</p>
+                  </a>
+                </div>
+                <div style={{backgroundColor: "black", width: "340px", borderRadius: "20px"}}>
+                  <a
+                    href="https://medium.com/@synaesthetic/lets-rethink-virtual-reality-daad06313330?sk=18dcd4586fff13d6c13a18d92d6afffc"
+                    target="_blank"
+                    rel="noreferrer"
+                    style={{textDecoration: "none"}}
+                  >
+                    <p style={{color: "white", padding: "20px"}}>Blog 2: “Let’s Rethink Virtual Reality”</p>
+                  </a>
+                </div>
+                <div style={{backgroundColor: "black", width: "340px", borderRadius: "20px"}}>
+                  <a
+                    href="https://medium.com/@synaesthetic/the-synaesthetic-manifesto-f0f63c4b374a?sk=016df46ef7ab3db3bb7604a126a6cf20"
+                    target="_blank"
+                    rel="noreferrer"
+                    style={{textDecoration: "none"}}
+                  >
+                    <p style={{color: "white", padding: "20px"}}>Blog 1: “The Synaesthetic Manifesto”</p>
+                  </a>
+                </div>
+                <div style={{backgroundColor: "black", width: "340px", borderRadius: "20px", gridColumn: "2/3"}}>
+                  <a
+                    href="https://musically.com/2019/10/22/synaesthetic-to-blend-classical-music-ai-and-ar-technologies/"
+                    target="_blank"
+                    rel="noreferrer"
+                    style={{textDecoration: "none"}}
+                  >
+                    <p style={{color: "white", padding: "20px"}}>Our first paragraph online got free press!</p>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </ContentBlock>
+          <ContentBlock top={"-400%"} heading={"Tech"}>
+            <div style={{justifyItems: "center", alignItems: "center"}} ref={contactUsRef}>
+              <div style={{
+                width: "100%",
+                position: "absolute",
+                top: "0px",
+                left: "0px",
+                marginTop: "60px"
+              }}>
+                <h1 style={{color: "white", textAlign: "center", margin: "0px"}}>Sign Up</h1>
+              </div>
+              <div style={{backgroundColor: "black", width: "340px", marginBottom: "20px", borderRadius: "20px"}}>
+                <p style={{color: "white", padding: "20px"}}>Contact Us! (Coming Soon)</p>
+              </div>
+            </div>
+          </ContentBlock>
+          <ContentBlock top={"-550%"} heading={"Tech"}>
+            <div style={{justifyItems: "center", alignItems: "center", gap: "20px"}} ref={backToSurfaceRef2}>
+              <iframe
+                width="728"
+                height="409.5"
+                src="https://www.youtube.com/embed/T1XgFsitnQw"
+                title="YouTube video player"
+                frameBorder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              />
+              <button onClick={() => { window.location.reload() }} style={{
+                backgroundColor: "black",
+                color: "white",
+                fontWeight: 600,
+                width: "150px",
+                height: "40px",
+                outline: "none",
+                border: "none",
+                borderRadius: "10px"
+              }}>Back To Suface</button>
+            </div>
+          </ContentBlock>
         </div>
 
         <div ref={productContentRef} style={{
@@ -292,7 +449,7 @@ function App() {
                 left: "0px",
                 marginTop: "60px"
               }}>
-                <h1 style={{color: "white", fontSize: "42px", textAlign: "center", margin: "0px"}}>“Audio Illuminated”</h1>
+                <h1 style={{color: "white", fontSize: "42px", textAlign: "center", margin: "0px"}}>“audio illuminated”</h1>
               </div>
               <ContentBlockP>
                 Our smart light visualizes the emotion in audio to create more engaging experiences, controlled by our app.
@@ -300,47 +457,45 @@ function App() {
               <ContentBlockP opacity={0.8}>
                 Using neuroscience, we create content-tailored visual ambiance. This multi-sensory immersion helps you feel more connected to the moment.
               </ContentBlockP>
-              <div style={{
-                width: "100%",
-                position: "absolute",
-                bottom: "0px",
-                left: "0px",
-                marginBottom: "60px"
-              }}>
-                <h1 style={{color: "white", textAlign: "center", margin: "0px"}}>Overview</h1>
-              </div>
             </div>
           </ContentBlock>
           <ContentBlock zIndex={10} top={"-100%"} heading={"Demo"}>
             <div style={{width: "100%", height: "100%", display: "grid", justifyItems: "center"}} ref={demoRef}>
-
-              <video
-                style={{outline: "none", marginTop: "10%"}}
-                height="40%"
-                tabIndex={0}
-                playsInline
-                controls
-                onLoadedData={() => {disableScroll.off()}}
-              >
-                <source type="video/mp4" src={demoVideo} />
-              </video>
-
-
               <div style={{
                 width: "100%",
                 position: "absolute",
-                bottom: "0px",
+                top: "0px",
                 left: "0px",
-                marginBottom: "60px"
+                marginTop: "60px"
               }}>
                 <h1 style={{color: "white", textAlign: "center", margin: "0px"}}>Demo</h1>
               </div>
+
+              <iframe
+                width="728"
+                height="409.5"
+                src="https://www.youtube.com/embed/ZkmyKHz1WGQ"
+                title="YouTube video player"
+                frameBorder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+                style={{marginTop: "10%"}}
+              />
             </div>
           </ContentBlock>
           <ContentBlock top={"-200%"} heading={"Tech"}>
             <div style={{justifyItems: "center", alignItems: "center"}} ref={signUpRef}>
+              <div style={{
+                width: "100%",
+                position: "absolute",
+                top: "0px",
+                left: "0px",
+                marginTop: "60px"
+              }}>
+                <h1 style={{color: "white", textAlign: "center", margin: "0px"}}>Sign Up</h1>
+              </div>
               <ContentBlockP>
-                Be among the first to experience aloom:
+                Be among the first to experience aloom
               </ContentBlockP>
               <div style={{backgroundColor: "black", width: "340px", marginBottom: "20px", borderRadius: "20px"}}>
                 <p style={{color: "white", padding: "20px"}}>Beta-testing for creators (Coming Soon)</p>
@@ -348,41 +503,41 @@ function App() {
               <div style={{backgroundColor: "black", width: "340px", borderRadius: "20px"}}>
                 <p style={{color: "white", padding: "20px"}}>Customer pre-orders (Coming Soon)</p>
               </div>
-              <div style={{
-                width: "100%",
-                position: "absolute",
-                bottom: "0px",
-                left: "0px",
-                marginBottom: "60px"
-              }}>
-                <h1 style={{color: "white", textAlign: "center", margin: "0px"}}>Sign Up</h1>
-              </div>
             </div>
           </ContentBlock>
           <ContentBlock top={"-300%"} heading={"Tech"}>
             <div ref={synesthesiaRef}>
-              <ContentBlockP>
-                The magic of our platform comes from the neurological condition of Synesthesia; where your senses mix & trigger each other, like seeing sounds.
-              </ContentBlockP>
-              <ContentBlockP opacity={0.8}>
-                These multi-sensory associations helped great artists from Van Gogh to Steve Wonder to  improve creativity, memory and focus. Some call it nature’s genius button.
-              </ContentBlockP>
-              <ContentBlockP opacity={0.6}>
-                Best of all, it’s not just genetic and can be learned. We’ve coded this natural mechanism along with customization tools, for communal creativity towards collective transcendence.
-              </ContentBlockP>
               <div style={{
                 width: "100%",
                 position: "absolute",
-                bottom: "0px",
+                top: "0px",
                 left: "0px",
-                marginBottom: "60px"
+                marginTop: "60px"
               }}>
-                <h1 style={{color: "white", textAlign: "center", margin: "0px"}}>Synesthesia</h1>
+                <h1 style={{color: "white", textAlign: "center", margin: "0px"}}>Our Tech</h1>
               </div>
+              <ContentBlockP>
+                We leverage Internet of Things, Mixed Reality & Machine Learning technologies, in a unique architecture prioritizing UX & integrability.
+              </ContentBlockP>
+              <ContentBlockP opacity={0.8}>
+                But the magic of our platform comes from the neurological condition of Synesthesia - when your senses mix & trigger each other, like <i>seeing sounds</i>. These multi-sensory associations helped great artists from Van Gogh to Steve Wonder improve creativity, memory & focus. Some call it nature’s genius button.
+              </ContentBlockP>
+              <ContentBlockP opacity={0.6}>
+                Best of all, it’s not just genetic & can be learned. We’ve coded this natural mechanism along with customization tools, for communal creativity towards collective transcendence.
+              </ContentBlockP>
             </div>
           </ContentBlock>
           <ContentBlock top={"-400%"} heading={"Tech"}>
-          <div style={{justifyItems: "center", alignItems: "center"}} ref={productLinksRef}>
+            <div style={{justifyItems: "center", alignItems: "center"}} ref={productLinksRef}>
+              <div style={{
+                width: "100%",
+                position: "absolute",
+                top: "0px",
+                left: "0px",
+                marginTop: "60px"
+              }}>
+                <h1 style={{color: "white", textAlign: "center", margin: "0px"}}>Explore Synesthesia</h1>
+              </div>
               <div style={{display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "20px"}}>
                 <div style={{backgroundColor: "black", width: "340px", borderRadius: "20px"}}>
                   <a
@@ -485,19 +640,19 @@ function App() {
                   </a>
                 </div>
               </div>
-              <div style={{
-                width: "100%",
-                position: "absolute",
-                bottom: "0px",
-                left: "0px",
-                marginBottom: "60px"
-              }}>
-                <h1 style={{color: "white", textAlign: "center", margin: "0px"}}>Explore</h1>
-              </div>
             </div>
           </ContentBlock>
           <ContentBlock top={"-550%"} heading={"Tech"}>
-            <div ref={backTopSurfaceRef}>
+            <div style={{justifyItems: "center", alignItems: "center", gap: "20px"}} ref={backToSurfaceRef}>
+              <iframe
+                width="728"
+                height="409.5"
+                src="https://www.youtube.com/embed/T1XgFsitnQw"
+                title="YouTube video player"
+                frameBorder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              />
               <button onClick={() => { window.location.reload() }} style={{
                 backgroundColor: "black",
                 color: "white",
@@ -523,6 +678,18 @@ function App() {
         left: "0px"
       }}>
         <InitContent handleScroll={() => { disableScroll.on() }} startTransition={(location) => { handleInitContent(location) }} />
+      </div>
+      <div style={{position: "fixed", top: "40px", left: "40px"}}>
+        <button onClick={() => { window.location.reload() }} style={{
+          backgroundColor: "black",
+          color: "white",
+          fontWeight: 600,
+          width: "150px",
+          height: "40px",
+          outline: "none",
+          border: "none",
+          borderRadius: "10px"
+        }}>Back To Suface</button>
       </div>
     </div>
   )

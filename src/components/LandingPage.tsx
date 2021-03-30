@@ -46,7 +46,6 @@ const LandingPage = ({ startTransition }: LandingPageProps) => {
 
     setTimeout(() => window.addEventListener("scroll", scrollHandler), 1000)
     setTimeout(() => window.addEventListener("click", scrollHandler), 1000)
-    
   }, [startTransition])
 
   return (
@@ -78,7 +77,7 @@ const LandingPage = ({ startTransition }: LandingPageProps) => {
             fontSize: "20px",
             fontWeight: 600,
             letterSpacing: "4px"
-          }}>Dive In</span>
+          }}>Dive In!</span>
         </div>
       </div>
     </div>

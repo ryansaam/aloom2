@@ -49,9 +49,10 @@ const Intro = ({ startTransition, handleScroll }: IntroProps) => {
         <LandingPage startTransition={() => {
           handleScroll()
           landingPageContainerRef!.current!.style.display = "none"
+
           diveVideoRef!.current!.play()
           listenForVideoEnd()
-          console.log(diveVideoRef!.current!.duration)
+
           setTimeout(() => {
             diveVideoRef!.current!.style.opacity = "0.0"
           }, 6.101333 * 1000)

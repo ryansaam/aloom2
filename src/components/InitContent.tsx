@@ -2,11 +2,12 @@ import React, { useRef } from 'react'
 import '../App.css'
 
 import Intro from "./Intro"
-import diveVideo from "../assets/aloom_dive.mp4"
 import companyTransition from "../assets/aloom_company_transition.mp4"
 import productTransition from "../assets/aloom_product_transition.mp4"
 import BackgroundVideo from "./BackgroundVideo"
 import TransitionButton from "./TransitionButton"
+
+import background from "../assets/initContentBackground.jpeg"
 
 interface InitContentProps {
   startTransition: (location: string) => void
@@ -15,11 +16,11 @@ interface InitContentProps {
 const InitContent = ({ startTransition, handleScroll }: InitContentProps) => {
   const companyVideoRef = useRef<HTMLVideoElement>(null)
   const productVideoRef = useRef<HTMLVideoElement>(null)
-  const diveVideoRef = useRef<HTMLVideoElement>(null)
   const introContainerRef = useRef<HTMLDivElement>(null)
   const companyContainerRef = useRef<HTMLDivElement>(null)
   const productContainerRef = useRef<HTMLDivElement>(null)
-  const diveContainerRef = useRef<HTMLDivElement>(null)
+  const contentBackgroundContainerRef = useRef<HTMLDivElement>(null)
+  const contentBackgroundRef = useRef<HTMLDivElement>(null)
 
   
   const introContentRef = useRef<HTMLDivElement>(null)
@@ -31,7 +32,7 @@ const InitContent = ({ startTransition, handleScroll }: InitContentProps) => {
     const companyBtn = companyBtnRef!.current!
     const productBtn = productBtnRef!.current!
     const introContent = introContentRef!.current!
-    const diveVideo = diveVideoRef!.current!
+    const contentBackground = contentBackgroundRef!.current!
 
     companyBtn.style.transition = "opacity 300ms linear"
     productBtn.style.transition = "opacity 300ms linear"
@@ -43,7 +44,7 @@ const InitContent = ({ startTransition, handleScroll }: InitContentProps) => {
     setTimeout(() => {
       companyBtn.className = "hover-up-effect"
       productBtn.className = "hover-down-effect"
-      diveVideo.className = "glow-effect"
+      contentBackground.className = "glow-effect"
     }, 300)
   }
 
@@ -63,8 +64,8 @@ const InitContent = ({ startTransition, handleScroll }: InitContentProps) => {
   }
 
   const transitionTo = (location: string) => {
-    diveContainerRef!.current!.style.backgroundColor = ""
-    diveVideoRef!.current!.style.display = "none"
+    contentBackgroundContainerRef!.current!.style.backgroundColor = ""
+    contentBackgroundContainerRef!.current!.style.display = "none"
     if (location === "company") {
       productContainerRef!.current!.style.display = "none"
       companyVideoRef!.current!.play()
@@ -73,7 +74,7 @@ const InitContent = ({ startTransition, handleScroll }: InitContentProps) => {
         startTransition(location)
       }, (3.5 * 1000))
     } else {
-      companyContainerRef!.current!.style.display = "none"
+      // companyContainerRef!.current!.style.display = "none"
       productVideoRef!.current!.play()
       setTimeout(() => {
         productVideoRef!.current!.pause()
@@ -115,7 +116,7 @@ const InitContent = ({ startTransition, handleScroll }: InitContentProps) => {
         }}>
           <BackgroundVideo scale={0.8} ref={productVideoRef} src={productTransition} onLoadedData={() => {  }} />
         </div>
-        <div ref={diveContainerRef} style={{
+        <div ref={contentBackgroundContainerRef} style={{
           backgroundColor: "black",
           width: "100%",
           height: "100%",
@@ -123,8 +124,16 @@ const InitContent = ({ startTransition, handleScroll }: InitContentProps) => {
           top: "0px",
           left: "0px"
         }}>
-          <BackgroundVideo scale={0.8} ref={diveVideoRef} src={diveVideo} onLoadedData={() => { diveVideoRef!.current!.currentTime = diveVideoRef!.current!.duration }} />
+          <div ref={contentBackgroundRef} style={{
+            backgroundImage: `url(${background})`,
+            backgroundPosition: "center",
+            backgroundRepeat: "no-repeat",
+            width: "100%",
+            height: "100%",
+            scale: "0.8"
+          }} />
         </div>
+        
         
         <div style={{
           width: "100%",
@@ -153,10 +162,10 @@ const InitContent = ({ startTransition, handleScroll }: InitContentProps) => {
             opacity: "0.0"
           }}>
             <p className="contentBlockP" style={{margin: "20px 0px"}}>
-              Aloom makes multimedia immersive.
+              aloom makes multimedia immersive.
             </p>
             <p className="contentBlockP" style={{opacity: 0.8, margin: "20px 0px"}}>
-              We enhance digital wellness and entertainment experiences in the home.
+              We enhance digital wellness & entertainment experiences in the home.
             </p>
             <p className="contentBlockP" style={{opacity: 0.6, margin: "20px 0px"}}>
               Our platform simply engages remote audiences better.
