@@ -46,6 +46,8 @@ function App() {
   const backToSurfaceRef = useRef<HTMLDivElement>(null)
   const backToSurfaceRef2 = useRef<HTMLDivElement>(null)
   const contactUsRef = useRef<HTMLDivElement>(null)
+
+  const productLinksZIndex = useRef<HTMLDivElement>(null)
   ///////////////////////
 
   const initVideo = (type: string) => {
@@ -177,9 +179,11 @@ function App() {
 
         if (frameNumber < 118 || frameNumber >= 126) {
           productLinksRef!.current!.style.display = "none"
+          productLinksZIndex!.current!.style.zIndex = "0"
         } else {
           productLinksRef!.current!.style.display = "grid"
           productLinksRef!.current!.style.opacity = `${(1 / (126 - 118)) * (frameNumber - 118)}`
+          productLinksZIndex!.current!.style.zIndex = "12"
         }
 
         if (frameNumber < 127) {
@@ -306,7 +310,7 @@ function App() {
                 left: "0px",
                 marginTop: "60px"
               }}>
-                <h1 style={{color: "white", textAlign: "center", margin: "0px"}}>Explore Synesthesia</h1>
+                <h1 style={{color: "white", textAlign: "center", margin: "0px"}}>News</h1>
               </div>
               <div style={{display: "grid", gridTemplateColumns: "1fr 1fr", gap: "20px"}}>
                 <div style={{backgroundColor: "black", width: "340px", borderRadius: "20px"}}>
@@ -336,7 +340,7 @@ function App() {
                     rel="noreferrer"
                     style={{textDecoration: "none"}}
                   >
-                    <p style={{color: "white", padding: "20px"}}>Aloom (synaesthetic) on the Mondo NYC Hot Startup Panel</p>
+                    <p style={{color: "white", padding: "20px"}}>aloom (synaesthetic) on the Mondo NYC Hot Startup Panel</p>
                   </a>
                 </div>
                 <div style={{backgroundColor: "black", width: "340px", borderRadius: "20px"}}>
@@ -356,7 +360,7 @@ function App() {
                     rel="noreferrer"
                     style={{textDecoration: "none"}}
                   >
-                    <p style={{color: "white", padding: "20px"}}>Aloom calls on musicians for its beta-testing program</p>
+                    <p style={{color: "white", padding: "20px"}}>aloom calls on musicians for its beta-testing program</p>
                   </a>
                 </div>
                 <div style={{backgroundColor: "black", width: "340px", borderRadius: "20px"}}>
@@ -401,7 +405,7 @@ function App() {
                 left: "0px",
                 marginTop: "60px"
               }}>
-                <h1 style={{color: "white", textAlign: "center", margin: "0px"}}>Sign Up</h1>
+                <h1 style={{color: "white", textAlign: "center", margin: "0px"}}>Contact</h1>
               </div>
               <div style={{backgroundColor: "black", width: "340px", marginBottom: "20px", borderRadius: "20px"}}>
                 <p style={{color: "white", padding: "20px"}}>Contact Us! (Coming Soon)</p>
@@ -527,7 +531,7 @@ function App() {
               </ContentBlockP>
             </div>
           </ContentBlock>
-          <ContentBlock top={"-400%"} heading={"Tech"}>
+          <ContentBlock ref={productLinksZIndex} top={"-400%"} heading={"Tech"}>
             <div style={{justifyItems: "center", alignItems: "center"}} ref={productLinksRef}>
               <div style={{
                 width: "100%",

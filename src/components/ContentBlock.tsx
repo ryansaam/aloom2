@@ -7,9 +7,12 @@ interface ContentBlockProps {
   heading: string
   children: React.ReactNode
 }
-const ContentBlock = ({ top, height, zIndex, children }: ContentBlockProps) => {
+const ContentBlock = React.forwardRef<
+  HTMLDivElement,
+  ContentBlockProps
+>(({ top, height, zIndex, heading, children }, ref ) => {
   return (
-    <div style={{
+    <div ref={ref} style={{
       width: "100%",
       height: height || "250%",
       position: "relative",
@@ -31,6 +34,11 @@ const ContentBlock = ({ top, height, zIndex, children }: ContentBlockProps) => {
       </div>
     </div>
   )
-}
+});
+// const ContentBlock = ({ top, height, zIndex, children }: ContentBlockProps) => {
+//   return (
+
+//   )
+// }
 
 export default ContentBlock
