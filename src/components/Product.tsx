@@ -1,6 +1,8 @@
-import React, { useRef, useEffect } from 'react'
+import React, { useRef, useEffect, useState } from 'react'
 import styled from 'styled-components'
 import disableScroll from 'disable-scroll'
+import mixpanel from 'mixpanel-browser'
+import YouTube from 'react-youtube'
 import '../App.css'
 
 import BackgroundVideo from "./BackgroundVideo"
@@ -10,14 +12,28 @@ import ContentBlockP from "./ContentBlockP"
 import ThirdPartyLink from "./ThirdPartyLink"
 import ButtonLink from "./ButtonLink"
 import BackToSurfaceButton from "./BackToSurfaceButton"
+import staticFrame from "../assets/aloom_transition_static.jpeg"
 
 import { getOpacity } from "./utils"
+
+interface DoOnce {
+  viewedOverview: boolean
+  viewedDemo: boolean
+  viewedSignUp: boolean
+  viewedTech: boolean
+  viewedExplore: boolean
+  viewedProductEndScreen: boolean
+  viewedBuellerVideo: boolean
+}
 
 const Product = () => {
   const heightRef = useRef<HTMLDivElement>(null)
   const videoRef = useRef<HTMLVideoElement>(null)
   const transitionVideo = useRef<HTMLVideoElement>(null)
   const imgRef = useRef<HTMLDivElement>(null)
+
+  const [playerState, setPlayerState] = useState<number | null>(null)
+  const [buellerState, setBuellerState] = useState<number | null>(null)
 
   // content section refs
   const overviewRef = useRef<HTMLDivElement>(null)
@@ -28,43 +44,125 @@ const Product = () => {
   const buellerRef = useRef<HTMLDivElement>(null)
   ///////////////////////
 
-  const setViewableContent = (frameNumber: number) => {
+  const setViewableContent = (frameNumber: number, actions: DoOnce) => {
     if (frameNumber <= 42) {
       if (overviewRef.current) overviewRef.current.style.opacity = "1.0"
+      if (!actions.viewedOverview) {
+        actions.viewedOverview = true
+        mixpanel.track("viewed overview")
+      }
     } else {
       if (overviewRef.current) overviewRef.current.style.opacity = "0.0"
     }
     if (frameNumber >= 50 && frameNumber <= 63) {
       if (demoRef.current) demoRef.current.style.opacity = getOpacity(50, 63, frameNumber)
+      if (!actions.viewedDemo) {
+        actions.viewedDemo = true
+        mixpanel.track("viewed demo")
+      }
     } else {
       if (demoRef.current) demoRef.current.style.opacity = "0.0"
     }
     if (frameNumber >= 72 && frameNumber <= 84) {
       if (signUpRef.current) signUpRef.current.style.opacity = getOpacity(72, 84, frameNumber)
+      if (!actions.viewedSignUp) {
+        actions.viewedSignUp = true
+        mixpanel.track("viewed sign up")
+      }
     } else {
       if (signUpRef.current) signUpRef.current.style.opacity = "0.0"
     }
     if (frameNumber >= 93 && frameNumber <= 105) {
       if (techRef.current) techRef.current.style.opacity = getOpacity(93, 105, frameNumber)
+      if (!actions.viewedTech) {
+        actions.viewedTech = true
+        mixpanel.track("viewed tech")
+      }
     } else {
       if (techRef.current) techRef.current.style.opacity = "0.0"
     }
     if (frameNumber >= 114 && frameNumber <= 126) {
       if (exploreRef.current) exploreRef.current.style.opacity = getOpacity(114, 126, frameNumber)
+      if (!actions.viewedExplore) {
+        actions.viewedExplore = true
+        mixpanel.track("viewed explore")
+      }
     } else {
       if (exploreRef.current) exploreRef.current.style.opacity = "0.0"
     }
     let timeoutId = window.setTimeout(() => {})
     if (frameNumber >= 138) {
+      if (!actions.viewedProductEndScreen) {
+        actions.viewedProductEndScreen = true
+        mixpanel.track("viewed product end screen")
+      }
       timeoutId = window.setTimeout(() => {
         if (buellerRef.current) buellerRef.current.style.transition = "opacity 600ms linear"
         if (buellerRef.current) buellerRef.current.style.opacity = "1.0"
-      }, 2000)
+        if (!actions.viewedBuellerVideo) {
+          actions.viewedBuellerVideo = true
+          mixpanel.track("viewed product bueller video")
+        }
+      }, 10 * 1000)
     } else {
       clearTimeout(timeoutId)
       if (buellerRef.current) buellerRef.current.style.opacity = "0.0"
     }
   }
+
+  useEffect(() => {
+    // -1   – unstarted
+    //  0   – ended
+    //  1   – playing
+    //  2   – paused
+    //  3   – buffering
+    //  5   – video cued
+    switch (playerState) {
+      case -1:
+        break;
+      case 0:
+        mixpanel.track('watching demo video');
+        break;
+      case 1:
+        mixpanel.time_event('watching demo video');
+        break;
+      case 2:
+        mixpanel.track('watching demo video');
+        break;
+      case 3:
+        mixpanel.track('watching demo video');
+        break;
+      case 5:
+        break
+    }
+  }, [playerState])
+
+  useEffect(() => {
+    // -1   – unstarted
+    //  0   – ended
+    //  1   – playing
+    //  2   – paused
+    //  3   – buffering
+    //  5   – video cued
+    switch (buellerState) {
+      case -1:
+        break;
+      case 0:
+        mixpanel.track('watching product bueller video');
+        break;
+      case 1:
+        mixpanel.time_event('watching product bueller video');
+        break;
+      case 2:
+        mixpanel.track('watching product bueller video');
+        break;
+      case 3:
+        mixpanel.track('watching product bueller video');
+        break;
+      case 5:
+        break
+    }
+  }, [buellerState])
 
   const initVideoScroll = () => {
     let frameNumber = 0; // start video at frame 0
@@ -84,6 +182,15 @@ const Product = () => {
     setHeight.style.height = Math.floor(video.duration) * playbackConst + "px";
 
     // Use requestAnimationFrame for smooth playback
+    const doOnce = {
+      viewedOverview: false,
+      viewedDemo: false,
+      viewedSignUp: false,
+      viewedTech: false,
+      viewedExplore: false,
+      viewedProductEndScreen: false,
+      viewedBuellerVideo: false
+    }
     function scrollPlay() {
       if (
         overviewRef.current === null
@@ -96,7 +203,7 @@ const Product = () => {
 
       frameNumber = (window.pageYOffset / playbackConst) + 30;
 
-      setViewableContent(frameNumber)
+      setViewableContent(frameNumber, doOnce)
 
       if (video.readyState !== 1) {
         video.currentTime = frameNumber;
@@ -114,6 +221,7 @@ const Product = () => {
       overviewRef.current!.style.transition = ""
       setTimeout(() => {
         disableScroll.off()
+        mixpanel.track("viewed product")
       }, 600)
     }, 600)
     overviewRef.current!.style.transition = "opacity 600ms linear"
@@ -147,13 +255,13 @@ const Product = () => {
           setTimeout(() => {
             imgRef.current!.style.display = "none"
             initTransition()
-          }, 60)
+          }, 120)
         }} />
       </TransitionVideoWrapper>
       <BackgroundVideoWrapper>
         <BackgroundVideo ref={videoRef} src={productVideo} onLoadedData={() => {  }} />
       </BackgroundVideoWrapper>
-      <Image ref={imgRef} />
+      <Image ref={imgRef} imageUrl={staticFrame} />
       <BackToSurfaceButton />
       <ContentWrapper>
         <ContentBlockWrapper1>
@@ -168,17 +276,17 @@ const Product = () => {
             </div>
           </ContentBlock>
         </ContentBlockWrapper1>
-        <ContentBlockWrapper2 top={1456}>
+        <ContentBlockWrapper2 top={1456} zIndex={15}>
           <ContentBlock ref={demoRef} title="Demo">
-            <iframe
-              width="728"
-              height="409.5"
-              src="https://www.youtube.com/embed/ZkmyKHz1WGQ"
-              title="YouTube video player"
-              frameBorder="0"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-              style={{marginTop: "10%"}}
+            <YouTube
+              videoId={"ZkmyKHz1WGQ"}
+              opts={{
+                height: '409.5',
+                width: '728',
+              }}
+              onStateChange={(event) => {
+                setPlayerState(event.data)
+              }}
             />
           </ContentBlock>
         </ContentBlockWrapper2>
@@ -235,19 +343,23 @@ const Product = () => {
         <ContentBlockWrapper3>
           <EndScreenWrapper>
             <ButtonLinkWrapper>
-              <ButtonLink to="company">See Company</ButtonLink>
-              <ButtonLink to="cross-roads">Go Home</ButtonLink>
-              <ScrollButton onClick={() => { window.scroll({top: 0, left: 0, behavior: 'smooth' }) }}>Back To Top</ScrollButton>
+              <ButtonLink onClick={() => { mixpanel.track("clicked see company") }} to="company">See Company</ButtonLink>
+              <ButtonLink onClick={() => { mixpanel.track("clicked product go home") }} to="cross-roads">Go Home</ButtonLink>
+              <ScrollButton onClick={() => {
+                mixpanel.track("clicked product back to top")
+                window.scroll({top: 0, left: 0, behavior: 'smooth' })
+              }}>Back To Top</ScrollButton>
             </ButtonLinkWrapper>
             <div ref={buellerRef}>
-              <iframe
-                width="728"
-                height="409.5"
-                src="https://www.youtube.com/embed/T1XgFsitnQw"
-                title="YouTube video player"
-                frameBorder="0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
+              <YouTube
+                videoId={"T1XgFsitnQw"}
+                opts={{
+                  height: '409.5',
+                  width: '728',
+                }}
+                onStateChange={(event) => {
+                  setBuellerState(event.data)
+                }}
               />
             </div>
           </EndScreenWrapper>
@@ -390,5 +502,18 @@ const ContentBlockContainer = styled.div`
   z-index: 10;
   opacity: 0.0;
 `
+
+/*
+<iframe
+  width="728"
+  height="409.5"
+  src="https://www.youtube.com/embed/ZkmyKHz1WGQ"
+  title="YouTube video player"
+  frameBorder="0"
+  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+  allowFullScreen
+  style={{marginTop: "10%"}}
+/>
+*/
 
 export default Product

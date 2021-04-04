@@ -5,10 +5,14 @@ import styled from 'styled-components'
 interface ButtonLinkProps {
   to: string
   children: React.ReactNode
+  onClick?: () => void
 }
-const ButtonLink = ({ to, children }: ButtonLinkProps) => {
+const ButtonLink = ({ to, children, onClick }: ButtonLinkProps) => {
   return (
-    <Link style={{textDecoration: "none"}} to={to} onClick={() => { window.scrollTo(0,0) }}>
+    <Link style={{textDecoration: "none"}} to={to} onClick={() => {
+      window.scrollTo(0,0)
+      if (onClick) onClick()
+    }}>
       <FakeButton>
         <p style={{margin: "auto"}}>{ children }</p>
       </FakeButton>

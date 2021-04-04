@@ -1,6 +1,7 @@
 import React, { useState, useRef } from 'react'
 import styled from 'styled-components'
 import { useHistory } from 'react-router-dom'
+import mixpanel from 'mixpanel-browser'
 import '../App.css'
 
 import startScreen from "../assets/dive_start_screen.png"
@@ -9,6 +10,7 @@ import BackgroundVideo from "./BackgroundVideo"
 import diveVideo from "../assets/aloom_dive.mp4"
 import TransitionButton from "./TransitionButton"
 import BackToSurfaceButton from "./BackToSurfaceButton"
+import staticFrame from "../assets/aloom_cross_roads_static.jpeg"
 
 const CrossRoads = () => {
   const containerRef = useRef<HTMLDivElement>(null)
@@ -50,11 +52,11 @@ const CrossRoads = () => {
     productBtn.style.opacity = "0.6"
     content.style.opacity = "1.0"
 
-    //setTimeout(() => {
-      companyBtn.className = "hover-up-effect"
-      productBtn.className = "hover-down-effect"
-      contentBackground.className += " glow-effect"
-    //}, 300)
+    companyBtn.className = "hover-up-effect"
+    productBtn.className = "hover-down-effect"
+    contentBackground.className += " glow-effect"
+
+    mixpanel.track("viewed cross roads")
   }
 
   const startContentAnimation = () => {
@@ -85,17 +87,17 @@ const CrossRoads = () => {
           setTimeout(() => {
             imgRef.current!.style.display = "none"
             videoRef.current!.play()
-          }, 60)
+          }, 120)
         }}
         scale={0.8}
       />
-      <Image ref={imgRef} />
+      <Image ref={imgRef} imageUrl={staticFrame} />
       <BackToSurfaceButton />
       <ContentLayer ref={contentRef}>
         <TransitionButton
           ref={companyBtnRef}
           onClick={() => {
-            // mixpanel.track("clicked company");
+            mixpanel.track("clicked company");
             fadeContentOutTo("company")
           }}
         >Company</TransitionButton>
@@ -116,7 +118,7 @@ const CrossRoads = () => {
           ref={productBtnRef}
           bottom
           onClick={() => {
-            // mixpanel.track("clicked company");
+            mixpanel.track("clicked product");
             fadeContentOutTo("product")
           }}
         >Product</TransitionButton> 

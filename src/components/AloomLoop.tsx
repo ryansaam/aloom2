@@ -1,10 +1,12 @@
-import React, { useRef } from 'react'
+import React, { useRef, useEffect } from 'react'
 import styled from 'styled-components'
 import { useHistory } from 'react-router-dom'
+import mixpanel from 'mixpanel-browser'
 import '../App.css'
 
 import BackgroundVideo from "./BackgroundVideo"
 import diveVideo from "../assets/aloom_landing_page_large.mp4"
+import staticFrame from "../assets/aloom_loop_static.jpeg"
 
 const AloomLoop = () => {
   const containerRef = useRef<HTMLDivElement>(null)
@@ -48,6 +50,10 @@ const AloomLoop = () => {
     window.addEventListener("click", onClick)
   }
 
+  useEffect(() => {
+    mixpanel.track("viewed site");
+  }, [])
+
   return (
     <Container ref={containerRef}>
       <BackgroundVideo
@@ -81,7 +87,7 @@ const AloomLoop = () => {
             letterSpacing: "4px"
           }}>Dive In!</span>
         </div>
-      <Image ref={imgRef} />
+      <Image ref={imgRef} imageUrl={staticFrame} />
     </Container>
   )
 }

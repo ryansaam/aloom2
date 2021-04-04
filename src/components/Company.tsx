@@ -1,6 +1,8 @@
-import React, { useRef, useEffect } from 'react'
+import React, { useRef, useEffect, useState } from 'react'
 import styled from 'styled-components'
 import disableScroll from 'disable-scroll'
+import mixpanel from 'mixpanel-browser'
+import YouTube from 'react-youtube'
 import '../App.css'
 
 import BackgroundVideo from "./BackgroundVideo"
@@ -11,6 +13,7 @@ import ProfileCard from "./ProfileCard"
 import ThirdPartyLink from "./ThirdPartyLink"
 import ButtonLink from "./ButtonLink"
 import BackToSurfaceButton from "./BackToSurfaceButton"
+import staticFrame from "../assets/aloom_transition_static.jpeg"
 
 import samim from "../assets/samim.jpeg"
 import shin from "../assets/shin_headshot.png"
@@ -19,18 +22,16 @@ import will from "../assets/will_mills.jpeg"
 import sean from "../assets/sean_mcgrail.jpeg"
 import dr_sean from "../assets/dr_sean.jpg"
 
-const getOpacity = (beginFrame: number, endFrame: number, currentFrame: number) => {
-  // example:
-  // whole = 1
-  // end frame = 10
-  // start frame = 5
-  // current frame = 4
-  // 1 / (10 - 5) * 4
-  // 1 / 5 * 4
-  // 0.2 * 4
-  // opacity = 0.8
-  const whole = 1
-  return whole / (endFrame - beginFrame) * (currentFrame - beginFrame) + ""
+import { getOpacity } from "./utils"
+
+interface DoOnce {
+  viewedDNA: boolean
+  viewedFounders: boolean
+  viewedAdvisors: boolean
+  viewedLinks: boolean
+  viewedContact: boolean
+  viewedCompanyEndScreen: boolean
+  viewedBuellerVideo: boolean
 }
 
 const Company = () => {
@@ -38,6 +39,8 @@ const Company = () => {
   const videoRef = useRef<HTMLVideoElement>(null)
   const transitionVideo = useRef<HTMLVideoElement>(null)
   const imgRef = useRef<HTMLDivElement>(null)
+
+  const [buellerState, setBuellerState] = useState<number | null>(null)
 
   // content section refs
   const dnaRef = useRef<HTMLDivElement>(null)
@@ -48,45 +51,100 @@ const Company = () => {
   const buellerRef = useRef<HTMLDivElement>(null)
   ///////////////////////
 
-  const setViewableContent = (frameNumber: number) => {
+  const setViewableContent = (frameNumber: number, actions: DoOnce) => {
     if (frameNumber <= 42) {
       if (dnaRef.current) dnaRef.current.style.opacity = "1.0"
+      if (!actions.viewedDNA) {
+        actions.viewedDNA = true
+        mixpanel.track("viewed dna")
+      }
     } else {
       if (dnaRef.current) dnaRef.current.style.opacity = "0.0"
     }
     if (frameNumber >= 50 && frameNumber <= 63) {
       if (foundersRef.current) foundersRef.current.style.opacity = getOpacity(50, 63, frameNumber)
+      if (!actions.viewedFounders) {
+        actions.viewedFounders = true
+        mixpanel.track("viewed founders")
+      }
     } else {
       if (foundersRef.current) foundersRef.current.style.opacity = "0.0"
     }
     if (frameNumber >= 72 && frameNumber <= 84) {
       if (advisorsRef.current) advisorsRef.current.style.opacity = getOpacity(72, 84, frameNumber)
+      if (!actions.viewedAdvisors) {
+        actions.viewedAdvisors = true
+        mixpanel.track("viewed advisors")
+      }
     } else {
       if (advisorsRef.current) advisorsRef.current.style.opacity = "0.0"
     }
     if (frameNumber >= 93 && frameNumber <= 105) {
       if (linksRef.current) linksRef.current.style.display = "grid"
       if (linksRef.current) linksRef.current.style.opacity = getOpacity(93, 105, frameNumber)
+      if (!actions.viewedLinks) {
+        actions.viewedLinks = true
+        mixpanel.track("viewed company links")
+      }
     } else {
       if (linksRef.current) linksRef.current.style.display = "none"
       if (linksRef.current) linksRef.current.style.opacity = "0.0"
     }
     if (frameNumber >= 114 && frameNumber <= 126) {
       if (contactRef.current) contactRef.current.style.opacity = getOpacity(114, 126, frameNumber)
+      if (!actions.viewedContact) {
+        actions.viewedContact = true
+        mixpanel.track("viewed contact")
+      }
     } else {
       if (contactRef.current) contactRef.current.style.opacity = "0.0"
     }
     let timeoutId = window.setTimeout(() => {})
     if (frameNumber >= 138) {
+      if (!actions.viewedContact) {
+        actions.viewedCompanyEndScreen = true
+        mixpanel.track("viewed company end screen")
+      }
       timeoutId = window.setTimeout(() => {
         if (buellerRef.current) buellerRef.current.style.transition = "opacity 600ms linear"
         if (buellerRef.current) buellerRef.current.style.opacity = "1.0"
-      }, 2000)
+        if (!actions.viewedBuellerVideo) {
+          actions.viewedBuellerVideo = true
+          mixpanel.track("viewed company bueller video")
+        }
+      }, 10 * 1000)
     } else {
       clearTimeout(timeoutId)
       if (buellerRef.current) buellerRef.current.style.opacity = "0.0"
     }
   }
+
+  useEffect(() => {
+    // -1   – unstarted
+    //  0   – ended
+    //  1   – playing
+    //  2   – paused
+    //  3   – buffering
+    //  5   – video cued
+    switch (buellerState) {
+      case -1:
+        break;
+      case 0:
+        mixpanel.track('watching company bueller video');
+        break;
+      case 1:
+        mixpanel.time_event('watching company bueller video');
+        break;
+      case 2:
+        mixpanel.track('watching company bueller video');
+        break;
+      case 3:
+        mixpanel.track('watching company bueller video');
+        break;
+      case 5:
+        break
+    }
+  }, [buellerState])
 
   const initVideoScroll = () => {
     let frameNumber = 0; // start video at frame 0
@@ -106,6 +164,15 @@ const Company = () => {
     setHeight.style.height = Math.floor(video.duration) * playbackConst + "px";
 
     // Use requestAnimationFrame for smooth playback
+    const doOnce = {
+      viewedDNA: false,
+      viewedFounders: false,
+      viewedAdvisors: false,
+      viewedLinks: false,
+      viewedContact: false,
+      viewedCompanyEndScreen: false,
+      viewedBuellerVideo: false
+    }
     function scrollPlay() {
       if (
         dnaRef.current === null
@@ -119,7 +186,7 @@ const Company = () => {
 
       frameNumber = (window.pageYOffset / playbackConst) + 30;
 
-      setViewableContent(frameNumber)
+      setViewableContent(frameNumber, doOnce)
 
       if (video.readyState !== 1) {
         video.currentTime = frameNumber;
@@ -137,6 +204,7 @@ const Company = () => {
       dnaRef.current!.style.transition = ""
       setTimeout(() => {
         disableScroll.off()
+        mixpanel.track("viewed company")
       }, 600)
     }, 600)
     dnaRef.current!.style.transition = "opacity 600ms linear"
@@ -176,7 +244,7 @@ const Company = () => {
       <BackgroundVideoWrapper>
         <BackgroundVideo ref={videoRef} src={companyVideo} />
       </BackgroundVideoWrapper>
-      <Image ref={imgRef} />
+      <Image ref={imgRef} imageUrl={staticFrame} />
       <BackToSurfaceButton />
       <ContentWrapper>
         <ContentBlockWrapper1>
@@ -262,19 +330,23 @@ const Company = () => {
         <ContentBlockWrapper3>
           <EndScreenWrapper>
             <ButtonLinkWrapper>
-              <ButtonLink to="product">See Product</ButtonLink>
-              <ButtonLink to="cross-roads">Go Home</ButtonLink>
-              <ScrollButton onClick={() => { window.scroll({top: 0, left: 0, behavior: 'smooth' }) }}>Back To Top</ScrollButton>
+              <ButtonLink onClick={() => { mixpanel.track("clicked see product") }} to="product">See Product</ButtonLink>
+              <ButtonLink onClick={() => { mixpanel.track("clicked company go home") }} to="cross-roads">Go Home</ButtonLink>
+              <ScrollButton onClick={() => {
+                mixpanel.track("clicked company back to top")
+                window.scroll({top: 0, left: 0, behavior: 'smooth' })
+              }}>Back To Top</ScrollButton>
             </ButtonLinkWrapper>
             <div ref={buellerRef}>
-              <iframe
-                width="728"
-                height="409.5"
-                src="https://www.youtube.com/embed/T1XgFsitnQw"
-                title="YouTube video player"
-                frameBorder="0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
+              <YouTube
+                videoId={"T1XgFsitnQw"}
+                opts={{
+                  height: '409.5',
+                  width: '728',
+                }}
+                onStateChange={(event) => {
+                  setBuellerState(event.data)
+                }}
               />
             </div>
           </EndScreenWrapper>
