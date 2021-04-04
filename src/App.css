@@ -1,6 +1,7 @@
 .App {
   height: calc(100% + 1px);
   position: relative;
+  background-color: black;
 }
 
 p {
@@ -96,9 +97,9 @@ p {
 }
 
 @keyframes glow {
-  0% {opacity: 0.6;}
-  50% {opacity: 1.0;}
-  100% {opacity: 0.6;}
+  0% {opacity: 1.0;}
+  50% {opacity: 0.6;}
+  100% {opacity: 1.0;}
 }
 
 @keyframes hover-down {

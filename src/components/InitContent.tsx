@@ -1,4 +1,5 @@
 import React, { useRef } from 'react'
+import mixpanel from 'mixpanel-browser'
 import '../App.css'
 
 import Intro from "./Intro"
@@ -149,6 +150,7 @@ const InitContent = ({ startTransition, handleScroll }: InitContentProps) => {
           <TransitionButton
             ref={companyBtnRef}
             onClick={() => {
+              mixpanel.track("clicked company");
               fadeContentOutTo("company")
             }}
           >Company</TransitionButton>
@@ -165,10 +167,10 @@ const InitContent = ({ startTransition, handleScroll }: InitContentProps) => {
               aloom makes multimedia immersive.
             </p>
             <p className="contentBlockP" style={{opacity: 0.8, margin: "20px 0px"}}>
-              We enhance digital wellness & entertainment experiences in the home.
+              Our lights are a content platform that simply engage remote audiences better.
             </p>
             <p className="contentBlockP" style={{opacity: 0.6, margin: "20px 0px"}}>
-              Our platform simply engages remote audiences better.
+              We merge digital experiences with the home.
             </p>
           </div>
 
@@ -176,6 +178,7 @@ const InitContent = ({ startTransition, handleScroll }: InitContentProps) => {
             ref={productBtnRef}
             bottom
             onClick={() => {
+              mixpanel.track("clicked product");
               fadeContentOutTo("product")
             }}
           >Product</TransitionButton>
@@ -192,6 +195,7 @@ const InitContent = ({ startTransition, handleScroll }: InitContentProps) => {
       }}>
         <Intro handleScroll={() => { handleScroll() }} startTransition={() => {
           introContainerRef!.current!.style.display = "none"
+          mixpanel.track("hit cross roads");
           setTimeout(() => {
             fadeContentIn()
           }, 1000)

@@ -27,7 +27,6 @@ const TransitionButton = React.forwardRef<HTMLSpanElement, TransitionButtonProps
         fontWeight: 600,
         letterSpacing: "3px",
         color: "white",
-        opacity: "0.0",
         display: "block"
       }}>{ children }</span>
     </button>

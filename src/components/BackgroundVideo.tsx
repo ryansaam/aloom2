@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from 'react'
 
 interface VideoMetaData {
   videoWidth: number;
@@ -11,7 +11,7 @@ interface BackgroundVideoProps {
   scale?: number;
   className?: string
   scaleToViewHeight?: boolean;
-  onLoadedData: () => void;
+  onLoadedData?: () => void;
 }
 const BackgroundVideo = React.forwardRef<
   HTMLVideoElement,
@@ -26,7 +26,7 @@ const BackgroundVideo = React.forwardRef<
   const [videoTranslateY, setVideoTranslateY] = useState(0);
   const [viewHeight, setViewHeight] = useState(0);
 
-  useEffect(() => {
+  const resizeVideo = useCallback(() => {
     const containerHeight = videoContainerRef!.current!.offsetHeight;
     const containerWidth = videoContainerRef!.current!.offsetWidth;
     setViewHeight(containerHeight);
@@ -43,7 +43,13 @@ const BackgroundVideo = React.forwardRef<
     if (dy > 0) {
       setVideoTranslateY(dy);
     }
-  }, [metadata]);
+  }, [metadata.videoHeight, metadata.videoWidth])
+
+  useEffect(() => {
+    resizeVideo()
+    window.addEventListener('resize', resizeVideo)
+    return window.removeEventListener('resize', resizeVideo)
+  }, [metadata, resizeVideo]);
 
   return (
     <div
@@ -75,7 +81,7 @@ const BackgroundVideo = React.forwardRef<
             videoHeight: e.currentTarget.offsetHeight,
             videoWidth: e.currentTarget.offsetWidth
           });
-          onLoadedData();
+          if (onLoadedData) onLoadedData();
         }}
       >
         <source type="video/mp4" src={src} />
