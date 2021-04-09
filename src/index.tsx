@@ -3,7 +3,10 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import mixpanel from 'mixpanel-browser'
+import {
+  initMixpanel,
+  DeviceType
+} from "./components/mixpanelAPI"
 
 ReactDOM.render(
   <React.StrictMode>
@@ -15,5 +18,5 @@ ReactDOM.render(
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))
 // or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
+initMixpanel("3a4ecf85fb63770846123fd07c21532c", DeviceType.Desktop)
 reportWebVitals();
-mixpanel.init("2a0b59b1cb78778c9cb8a3cb63528a08");

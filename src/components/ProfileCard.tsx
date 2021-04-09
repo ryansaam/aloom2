@@ -13,7 +13,7 @@ const ProfileCard = ({ imgSrc, imgAlt, name, title, desc }: ProfileCardProps) =>
     <div className="profileCard">
       <div className="profileCardImgContainer">
         <img className="profileCardImg" src={imgSrc} alt={imgAlt} />
-        <div>
+        <div className="profileTextWrapper">
           <h1 className="profileCardName">{ name }</h1>
           <h1 className="profileCardTitle">{ title }</h1>
         </div>

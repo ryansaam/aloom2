@@ -1,36 +1,45 @@
-import React, { useRef, useEffect, useState } from 'react'
+import React, { useRef, useState, useEffect } from 'react'
 import styled from 'styled-components'
-import disableScroll from 'disable-scroll'
-import mixpanel from 'mixpanel-browser'
 import YouTube from 'react-youtube'
 import '../App.css'
 
-import BackgroundVideo from "./BackgroundVideo"
-import productVideo from "../assets/aloom_product_background.mp4"
+import staticFrame from "../assets/aloom_company_transition_static.jpeg"
 import productTransition from "../assets/aloom_product_transition.mp4"
+import productVideo from "../assets/aloom_product_background.mp4"
+import BackgroundVideo from "./BackgroundVideo"
 import ContentBlockP from "./ContentBlockP"
 import ThirdPartyLink from "./ThirdPartyLink"
 import ButtonLink from "./ButtonLink"
 import BackToSurfaceButton from "./BackToSurfaceButton"
-import staticFrame from "../assets/aloom_transition_static.jpeg"
+import {
+  Page,
+  trackClickedBackToSurface,
+  trackClickedSeeCompany,
+  trackClickedGoHome,
+  trackClickedBackToTop,
+  trackProductView,
+  trackStartWatchingBueller,
+  trackStopWatchingBueller,
+  ProductDoOnce,
+  trackEndScreenView,
+  trackStartWatchingDemo,
+  trackStopWatchingDemo,
+  trackOverviewView,
+  trackDemoView,
+  trackSignUpView,
+  trackTechView,
+  trackExploreView
+} from "./mixpanelAPI"
 
 import { getOpacity } from "./utils"
 
-interface DoOnce {
-  viewedOverview: boolean
-  viewedDemo: boolean
-  viewedSignUp: boolean
-  viewedTech: boolean
-  viewedExplore: boolean
-  viewedProductEndScreen: boolean
-  viewedBuellerVideo: boolean
-}
-
-const Product = () => {
-  const heightRef = useRef<HTMLDivElement>(null)
-  const videoRef = useRef<HTMLVideoElement>(null)
+const AltProduct = () => {
   const transitionVideo = useRef<HTMLVideoElement>(null)
-  const imgRef = useRef<HTMLDivElement>(null)
+  const transitionWrapper = useRef<HTMLDivElement>(null)
+  const heightRef = useRef<HTMLDivElement>(null)
+  const hide = useRef<HTMLDivElement>(null)
+  const videoRef = useRef<HTMLVideoElement>(null)
+  const backgroundWrapper = useRef<HTMLDivElement>(null)
 
   const [playerState, setPlayerState] = useState<number | null>(null)
   const [buellerState, setBuellerState] = useState<number | null>(null)
@@ -44,12 +53,15 @@ const Product = () => {
   const buellerRef = useRef<HTMLDivElement>(null)
   ///////////////////////
 
-  const setViewableContent = (frameNumber: number, actions: DoOnce) => {
+  const setViewableContent = (frameNumber: number, actions: ProductDoOnce) => {
     if (frameNumber <= 42) {
       if (overviewRef.current) overviewRef.current.style.opacity = "1.0"
       if (!actions.viewedOverview) {
+        setTimeout(() => {
+          if (overviewRef.current) overviewRef.current.style.transition = ""
+        }, 600)
         actions.viewedOverview = true
-        mixpanel.track("viewed overview")
+        trackOverviewView()
       }
     } else {
       if (overviewRef.current) overviewRef.current.style.opacity = "0.0"
@@ -58,7 +70,7 @@ const Product = () => {
       if (demoRef.current) demoRef.current.style.opacity = getOpacity(50, 63, frameNumber)
       if (!actions.viewedDemo) {
         actions.viewedDemo = true
-        mixpanel.track("viewed demo")
+        trackDemoView()
       }
     } else {
       if (demoRef.current) demoRef.current.style.opacity = "0.0"
@@ -67,7 +79,7 @@ const Product = () => {
       if (signUpRef.current) signUpRef.current.style.opacity = getOpacity(72, 84, frameNumber)
       if (!actions.viewedSignUp) {
         actions.viewedSignUp = true
-        mixpanel.track("viewed sign up")
+        trackSignUpView()
       }
     } else {
       if (signUpRef.current) signUpRef.current.style.opacity = "0.0"
@@ -76,7 +88,7 @@ const Product = () => {
       if (techRef.current) techRef.current.style.opacity = getOpacity(93, 105, frameNumber)
       if (!actions.viewedTech) {
         actions.viewedTech = true
-        mixpanel.track("viewed tech")
+        trackTechView()
       }
     } else {
       if (techRef.current) techRef.current.style.opacity = "0.0"
@@ -85,29 +97,97 @@ const Product = () => {
       if (exploreRef.current) exploreRef.current.style.opacity = getOpacity(114, 126, frameNumber)
       if (!actions.viewedExplore) {
         actions.viewedExplore = true
-        mixpanel.track("viewed explore")
+        trackExploreView()
       }
     } else {
       if (exploreRef.current) exploreRef.current.style.opacity = "0.0"
     }
     let timeoutId = window.setTimeout(() => {})
     if (frameNumber >= 138) {
-      if (!actions.viewedProductEndScreen) {
-        actions.viewedProductEndScreen = true
-        mixpanel.track("viewed product end screen")
+      if (!actions.viewedEndScreen) {
+        actions.viewedEndScreen = true
+        trackEndScreenView(Page.Product)
       }
       timeoutId = window.setTimeout(() => {
         if (buellerRef.current) buellerRef.current.style.transition = "opacity 600ms linear"
         if (buellerRef.current) buellerRef.current.style.opacity = "1.0"
-        if (!actions.viewedBuellerVideo) {
-          actions.viewedBuellerVideo = true
-          mixpanel.track("viewed product bueller video")
-        }
       }, 10 * 1000)
     } else {
       clearTimeout(timeoutId)
       if (buellerRef.current) buellerRef.current.style.opacity = "0.0"
     }
+  }
+
+  const initVideoScroll = () => {
+    let frameNumber = 0; // start video at frame 0
+
+    let video = videoRef!.current!
+
+    video.playbackRate = 0.5;
+
+    // lower numbers = faster playback
+    const playbackConst = 50;
+
+    // get page height from video duration
+    const setHeight = heightRef!.current!;
+    // select video element
+
+    // dynamically set the page height according to video length
+    setTimeout(() => {
+      hide.current!.style.display = "block"
+      setHeight.style.height = Math.floor(video.duration) * playbackConst + "px";
+    }, 1000)
+
+    // Use requestAnimationFrame for smooth playback
+    const doOnce: ProductDoOnce = {
+      viewedOverview: false,
+      viewedDemo: false,
+      viewedSignUp: false,
+      viewedTech: false,
+      viewedExplore: false,
+      viewedEndScreen: false
+    }
+    function scrollPlay() {
+      // if (
+      //   dnaRef.current === null
+      //   || foundersRef.current === null
+      //   || advisorsRef.current === null
+      //   || linksRef.current === null
+      //   || contactRef.current === null
+      //   || buellerRef.current === null
+      // ) return
+
+
+      frameNumber = (window.pageYOffset / playbackConst) + 30;
+
+      setViewableContent(frameNumber, doOnce)
+
+      if (video.readyState !== 1) {
+        video.currentTime = frameNumber;
+      }
+      window.requestAnimationFrame(scrollPlay);
+    }
+
+    window.requestAnimationFrame(scrollPlay);
+  };
+
+  const initTransition = () => {
+    const listenForVideoEnd = () => {
+      const id = setInterval(() => {
+        if (transitionVideo.current && transitionVideo.current.currentTime >= 3.2) {
+          transitionVideo.current.pause()
+          backgroundWrapper.current!.style.visibility = "visible"
+          setTimeout(() => {
+            transitionVideo.current!.style.visibility = "hidden"
+          }, 1000)
+          initVideoScroll()
+          clearInterval(id)
+        }
+      }, 10)
+    }
+
+    transitionVideo.current!.play()
+    listenForVideoEnd()
   }
 
   useEffect(() => {
@@ -121,16 +201,16 @@ const Product = () => {
       case -1:
         break;
       case 0:
-        mixpanel.track('watching demo video');
+        trackStopWatchingDemo()
         break;
       case 1:
-        mixpanel.time_event('watching demo video');
+        trackStartWatchingDemo()
         break;
       case 2:
-        mixpanel.track('watching demo video');
+        trackStopWatchingDemo()
         break;
       case 3:
-        mixpanel.track('watching demo video');
+        trackStopWatchingDemo()
         break;
       case 5:
         break
@@ -148,121 +228,55 @@ const Product = () => {
       case -1:
         break;
       case 0:
-        mixpanel.track('watching product bueller video');
+        trackStopWatchingBueller(Page.Product)
         break;
       case 1:
-        mixpanel.time_event('watching product bueller video');
+        trackStartWatchingBueller()
         break;
       case 2:
-        mixpanel.track('watching product bueller video');
+        trackStopWatchingBueller(Page.Product)
         break;
       case 3:
-        mixpanel.track('watching product bueller video');
+        trackStopWatchingBueller(Page.Product)
         break;
       case 5:
         break
     }
   }, [buellerState])
 
-  const initVideoScroll = () => {
-    let frameNumber = 0; // start video at frame 0
-
-    let video = videoRef!.current!
-
-    video.playbackRate = 0.5;
-
-    // lower numbers = faster playback
-    const playbackConst = 50;
-
-    // get page height from video duration
-    const setHeight = heightRef!.current!;
-    // select video element
-
-    // dynamically set the page height according to video length
-    setHeight.style.height = Math.floor(video.duration) * playbackConst + "px";
-
-    // Use requestAnimationFrame for smooth playback
-    const doOnce = {
-      viewedOverview: false,
-      viewedDemo: false,
-      viewedSignUp: false,
-      viewedTech: false,
-      viewedExplore: false,
-      viewedProductEndScreen: false,
-      viewedBuellerVideo: false
-    }
-    function scrollPlay() {
-      if (
-        overviewRef.current === null
-        || demoRef.current === null
-        || signUpRef.current === null
-        || techRef.current === null
-        || exploreRef.current === null
-        || buellerRef.current === null
-      ) return
-
-      frameNumber = (window.pageYOffset / playbackConst) + 30;
-
-      setViewableContent(frameNumber, doOnce)
-
-      if (video.readyState !== 1) {
-        video.currentTime = frameNumber;
-      }
-      window.requestAnimationFrame(scrollPlay);
-    }
-
-    window.requestAnimationFrame(scrollPlay);
-  };
-
-  const fadeContentIn = () => {
-    transitionVideo.current!.style.transition = "opacity 600ms linear"
-    setTimeout(() => {
-      transitionVideo.current!.style.opacity = "0.0"
-      overviewRef.current!.style.transition = ""
-      setTimeout(() => {
-        disableScroll.off()
-        mixpanel.track("viewed product")
-      }, 600)
-    }, 600)
-    overviewRef.current!.style.transition = "opacity 600ms linear"
-    overviewRef.current!.style.opacity = "1.0"
-    initVideoScroll()
-  }
-  const initTransition = () => {
-    const listenForVideoEnd = () => {
-      const id = setInterval(() => {
-        if (transitionVideo.current && transitionVideo.current.currentTime >= 3.2) {
-          transitionVideo.current.pause()
-          fadeContentIn()
-          clearInterval(id)
-        }
-      }, 10)
-    }
-
-    transitionVideo.current!.play()
-    listenForVideoEnd()
-  }
-
   useEffect(() => {
+    trackProductView()
+    overviewRef.current!.style.opacity = "0.0"
+    overviewRef.current!.style.transition = "opacity 600ms linear"
+
     window.scrollTo(0,0)
-    disableScroll.on()
+    const handleScroll = () => {
+      window.scroll({top: 0, left: 0, behavior: 'smooth' })
+    }
+
+    window.addEventListener("scroll", handleScroll)
+    setTimeout(() => {
+      window.removeEventListener("scroll", handleScroll)
+    }, 3000)
+
+    return () => { window.removeEventListener("scroll", handleScroll) }
   }, [])
 
   return (
-    <Container ref={heightRef} >
-      <TransitionVideoWrapper>
-        <BackgroundVideo ref={transitionVideo} scale={0.8} src={productTransition} onLoadedData={() => {
+    <Container ref={heightRef} bgWidth={1920} bgHeight={1440} bgScale={0.82} imageUrl={staticFrame}>
+      <TransitionVideoWrapper ref={transitionWrapper}>
+        <BackgroundVideo ref={transitionVideo} scale={0.82} src={productTransition} onLoadedData={() => {
           setTimeout(() => {
-            imgRef.current!.style.display = "none"
+            transitionWrapper.current!.style.visibility = "visible"
+            transitionVideo.current!.playbackRate = 2.0
             initTransition()
-          }, 120)
+          }, 60)
         }} />
       </TransitionVideoWrapper>
-      <BackgroundVideoWrapper>
-        <BackgroundVideo ref={videoRef} src={productVideo} onLoadedData={() => {  }} />
+      <BackgroundVideoWrapper ref={backgroundWrapper}>
+        <BackgroundVideo ref={videoRef} src={productVideo} />
       </BackgroundVideoWrapper>
-      <Image ref={imgRef} imageUrl={staticFrame} />
-      <BackToSurfaceButton />
+      <BackToSurfaceButton onClick={() => { trackClickedBackToSurface(Page.Product) }} />
       <ContentWrapper>
         <ContentBlockWrapper1>
           <ContentBlock ref={overviewRef} title="“audio illuminated”">
@@ -277,7 +291,7 @@ const Product = () => {
           </ContentBlock>
         </ContentBlockWrapper1>
         <ContentBlockWrapper2 top={1456} zIndex={15}>
-          <ContentBlock ref={demoRef} title="Demo">
+          <ContentBlock ref={demoRef} title="Overview">
             <YouTube
               videoId={"ZkmyKHz1WGQ"}
               opts={{
@@ -340,13 +354,13 @@ const Product = () => {
             </LinkWrapper>
           </ContentBlock>
         </ContentBlockWrapper2>
-        <ContentBlockWrapper3>
+        <ContentBlockWrapper3 ref={hide}>
           <EndScreenWrapper>
             <ButtonLinkWrapper>
-              <ButtonLink onClick={() => { mixpanel.track("clicked see company") }} to="company">See Company</ButtonLink>
-              <ButtonLink onClick={() => { mixpanel.track("clicked product go home") }} to="cross-roads">Go Home</ButtonLink>
+              <ButtonLink onClick={() => { trackClickedSeeCompany() }} to="company">See Company</ButtonLink>
+              <ButtonLink onClick={() => { trackClickedGoHome(Page.Product) }} to="cross-roads">Go Home</ButtonLink>
               <ScrollButton onClick={() => {
-                mixpanel.track("clicked product back to top")
+                trackClickedBackToTop(Page.Product)
                 window.scroll({top: 0, left: 0, behavior: 'smooth' })
               }}>Back To Top</ScrollButton>
             </ButtonLinkWrapper>
@@ -364,43 +378,42 @@ const Product = () => {
             </div>
           </EndScreenWrapper>
         </ContentBlockWrapper3>
-      </ContentWrapper>  
+      </ContentWrapper>
     </Container>
   )
 }
 
-const Container = styled.div`
-  width: 100vw;
-  height: 100vh;
-  position: relative;
-`
-interface ImageProps {
-  imageUrl?: string
+interface ContainerProps {
+  imageUrl: string
+  bgWidth: number
+  bgHeight: number
+  bgScale: number
 }
-const Image = styled.div<ImageProps>`
-  background-image: url(${props => props.imageUrl || null});
+const Container = styled.div<ContainerProps>`
+  background-image: url(${props => props.imageUrl});
   background-position: center;
   background-repeat: no-repeat;
-  background-color: black;
+  background-size: ${props => props.bgWidth * props.bgScale}px ${props => props.bgHeight * props.bgScale}px;
+
   width: 100vw;
-  height: 100vh;
-  position: absolute;
-  top: 0px;
-  left: 0px;
-  z-index: 20;
+  height: calc(100vh + 1px);
+  position: relative;
 `
 const TransitionVideoWrapper = styled.div`
   position: absolute;
   top: 0px;
   left: 0px;
   z-index: 6;
+  visibility: hidden;
 `
 const BackgroundVideoWrapper = styled.div`
   position: sticky;
   top: 0px;
   left: 0px;
   z-index: 5;
+  visibility: hidden;
 `
+
 
 const ContentWrapper = styled.div`
   background-color: rgba(0,0,0,0);
@@ -439,6 +452,7 @@ const ContentBlockWrapper3 = styled.div`
   position: absolute;
   bottom: 0px;
   z-index: 10;
+  display: none;
 `
 const LinkWrapper = styled.div`
   display: grid;
@@ -478,9 +492,8 @@ interface ContentBlockProps {
 const ContentBlock = React.forwardRef<HTMLDivElement, ContentBlockProps>(({ title, children }, ref) => {
   return (
     <ContentBlockContainer ref={ref}>
-      <h1 style={{
+      <h1 className="contentHeaders" style={{
         width: "100%",
-        margin: "60px auto",
         color: "white",
         fontSize: "38px",
         letterSpacing: "4px",
@@ -516,4 +529,4 @@ const ContentBlockContainer = styled.div`
 />
 */
 
-export default Product
+export default AltProduct

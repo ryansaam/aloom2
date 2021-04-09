@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import {
   BrowserRouter as Router,
   Switch,
@@ -6,11 +6,18 @@ import {
 } from 'react-router-dom'
 
 import CrossRoads from "./components/CrossRoads"
-import Company from "./components/Company"
-import Product from "./components/Product"
+import AltCompany from "./components/AltCompany"
+import AltProduct from "./components/AltProduct"
 import AloomLoop from "./components/AloomLoop"
+import {
+  trackVisitedSite
+} from "./components/mixpanelAPI"
 
 function App() {
+  useEffect(() => {
+    trackVisitedSite()
+  }, [])
+
   return (
     <Router>
       <Switch>
@@ -18,10 +25,10 @@ function App() {
           <CrossRoads />
         </Route>
         <Route path="/company">
-          <Company />
+          <AltCompany />
         </Route>
         <Route path="/product">
-          <Product />
+          <AltProduct />
         </Route>
         <Route path="/">
           <AloomLoop />

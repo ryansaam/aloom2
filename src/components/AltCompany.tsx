@@ -1,19 +1,34 @@
-import React, { useRef, useEffect, useState } from 'react'
+import React, { useRef, useState, useEffect } from 'react'
 import styled from 'styled-components'
-import disableScroll from 'disable-scroll'
-import mixpanel from 'mixpanel-browser'
 import YouTube from 'react-youtube'
 import '../App.css'
 
-import BackgroundVideo from "./BackgroundVideo"
-import companyVideo from "../assets/aloom_company_background.mp4"
+import staticFrame from "../assets/aloom_company_transition_static.jpeg"
 import companyTransition from "../assets/aloom_company_transition.mp4"
+import companyVideo from "../assets/aloom_company_background.mp4"
+import BackgroundVideo from "./BackgroundVideo"
 import ContentBlockP from "./ContentBlockP"
 import ProfileCard from "./ProfileCard"
 import ThirdPartyLink from "./ThirdPartyLink"
 import ButtonLink from "./ButtonLink"
 import BackToSurfaceButton from "./BackToSurfaceButton"
-import staticFrame from "../assets/aloom_transition_static.jpeg"
+import {
+  Page,
+  trackClickedBackToSurface,
+  trackClickedSeeProduct,
+  trackClickedGoHome,
+  trackClickedBackToTop,
+  trackCompanyView,
+  trackStartWatchingBueller,
+  trackStopWatchingBueller,
+  CompanyDoOnce,
+  track_DNA_View,
+  trackFoundersView,
+  trackAdvisorsView,
+  trackNewsView,
+  trackContactView,
+  trackEndScreenView
+} from "./mixpanelAPI"
 
 import samim from "../assets/samim.jpeg"
 import shin from "../assets/shin_headshot.png"
@@ -24,22 +39,13 @@ import dr_sean from "../assets/dr_sean.jpg"
 
 import { getOpacity } from "./utils"
 
-interface DoOnce {
-  viewedDNA: boolean
-  viewedFounders: boolean
-  viewedAdvisors: boolean
-  viewedLinks: boolean
-  viewedContact: boolean
-  viewedCompanyEndScreen: boolean
-  viewedBuellerVideo: boolean
-}
-
-const Company = () => {
-  const heightRef = useRef<HTMLDivElement>(null)
-  const videoRef = useRef<HTMLVideoElement>(null)
+const AltCompany = () => {
   const transitionVideo = useRef<HTMLVideoElement>(null)
-  const imgRef = useRef<HTMLDivElement>(null)
-
+  const transitionWrapper = useRef<HTMLDivElement>(null)
+  const heightRef = useRef<HTMLDivElement>(null)
+  const hide = useRef<HTMLDivElement>(null)
+  const videoRef = useRef<HTMLVideoElement>(null)
+  const backgroundWrapper = useRef<HTMLDivElement>(null)
   const [buellerState, setBuellerState] = useState<number | null>(null)
 
   // content section refs
@@ -51,12 +57,15 @@ const Company = () => {
   const buellerRef = useRef<HTMLDivElement>(null)
   ///////////////////////
 
-  const setViewableContent = (frameNumber: number, actions: DoOnce) => {
+  const setViewableContent = (frameNumber: number, actions: CompanyDoOnce) => {
     if (frameNumber <= 42) {
       if (dnaRef.current) dnaRef.current.style.opacity = "1.0"
-      if (!actions.viewedDNA) {
-        actions.viewedDNA = true
-        mixpanel.track("viewed dna")
+      if (!actions.viewed_DNA) {
+        setTimeout(() => {
+          if (dnaRef.current) dnaRef.current.style.transition = ""
+        }, 600)
+        actions.viewed_DNA = true
+        track_DNA_View()
       }
     } else {
       if (dnaRef.current) dnaRef.current.style.opacity = "0.0"
@@ -65,7 +74,7 @@ const Company = () => {
       if (foundersRef.current) foundersRef.current.style.opacity = getOpacity(50, 63, frameNumber)
       if (!actions.viewedFounders) {
         actions.viewedFounders = true
-        mixpanel.track("viewed founders")
+        trackFoundersView()
       }
     } else {
       if (foundersRef.current) foundersRef.current.style.opacity = "0.0"
@@ -74,7 +83,7 @@ const Company = () => {
       if (advisorsRef.current) advisorsRef.current.style.opacity = getOpacity(72, 84, frameNumber)
       if (!actions.viewedAdvisors) {
         actions.viewedAdvisors = true
-        mixpanel.track("viewed advisors")
+        trackAdvisorsView()
       }
     } else {
       if (advisorsRef.current) advisorsRef.current.style.opacity = "0.0"
@@ -82,9 +91,9 @@ const Company = () => {
     if (frameNumber >= 93 && frameNumber <= 105) {
       if (linksRef.current) linksRef.current.style.display = "grid"
       if (linksRef.current) linksRef.current.style.opacity = getOpacity(93, 105, frameNumber)
-      if (!actions.viewedLinks) {
-        actions.viewedLinks = true
-        mixpanel.track("viewed company links")
+      if (!actions.viewedNews) {
+        actions.viewedNews = true
+        trackNewsView()
       }
     } else {
       if (linksRef.current) linksRef.current.style.display = "none"
@@ -94,7 +103,7 @@ const Company = () => {
       if (contactRef.current) contactRef.current.style.opacity = getOpacity(114, 126, frameNumber)
       if (!actions.viewedContact) {
         actions.viewedContact = true
-        mixpanel.track("viewed contact")
+        trackContactView()
       }
     } else {
       if (contactRef.current) contactRef.current.style.opacity = "0.0"
@@ -102,49 +111,18 @@ const Company = () => {
     let timeoutId = window.setTimeout(() => {})
     if (frameNumber >= 138) {
       if (!actions.viewedContact) {
-        actions.viewedCompanyEndScreen = true
-        mixpanel.track("viewed company end screen")
+        actions.viewedEndScreen = true
+        trackEndScreenView(Page.Company)
       }
       timeoutId = window.setTimeout(() => {
         if (buellerRef.current) buellerRef.current.style.transition = "opacity 600ms linear"
         if (buellerRef.current) buellerRef.current.style.opacity = "1.0"
-        if (!actions.viewedBuellerVideo) {
-          actions.viewedBuellerVideo = true
-          mixpanel.track("viewed company bueller video")
-        }
       }, 10 * 1000)
     } else {
       clearTimeout(timeoutId)
       if (buellerRef.current) buellerRef.current.style.opacity = "0.0"
     }
   }
-
-  useEffect(() => {
-    // -1   – unstarted
-    //  0   – ended
-    //  1   – playing
-    //  2   – paused
-    //  3   – buffering
-    //  5   – video cued
-    switch (buellerState) {
-      case -1:
-        break;
-      case 0:
-        mixpanel.track('watching company bueller video');
-        break;
-      case 1:
-        mixpanel.time_event('watching company bueller video');
-        break;
-      case 2:
-        mixpanel.track('watching company bueller video');
-        break;
-      case 3:
-        mixpanel.track('watching company bueller video');
-        break;
-      case 5:
-        break
-    }
-  }, [buellerState])
 
   const initVideoScroll = () => {
     let frameNumber = 0; // start video at frame 0
@@ -161,27 +139,29 @@ const Company = () => {
     // select video element
 
     // dynamically set the page height according to video length
-    setHeight.style.height = Math.floor(video.duration) * playbackConst + "px";
+    setTimeout(() => {
+      hide.current!.style.display = "block"
+      setHeight.style.height = Math.floor(video.duration) * playbackConst + "px";
+    }, 1000)
 
     // Use requestAnimationFrame for smooth playback
-    const doOnce = {
-      viewedDNA: false,
+    const doOnce: CompanyDoOnce = {
+      viewed_DNA: false,
       viewedFounders: false,
       viewedAdvisors: false,
-      viewedLinks: false,
+      viewedNews: false,
       viewedContact: false,
-      viewedCompanyEndScreen: false,
-      viewedBuellerVideo: false
+      viewedEndScreen: false
     }
     function scrollPlay() {
-      if (
-        dnaRef.current === null
-        || foundersRef.current === null
-        || advisorsRef.current === null
-        || linksRef.current === null
-        || contactRef.current === null
-        || buellerRef.current === null
-      ) return
+      // if (
+      //   dnaRef.current === null
+      //   || foundersRef.current === null
+      //   || advisorsRef.current === null
+      //   || linksRef.current === null
+      //   || contactRef.current === null
+      //   || buellerRef.current === null
+      // ) return
 
 
       frameNumber = (window.pageYOffset / playbackConst) + 30;
@@ -197,26 +177,16 @@ const Company = () => {
     window.requestAnimationFrame(scrollPlay);
   };
 
-  const fadeContentIn = () => {
-    transitionVideo.current!.style.transition = "opacity 600ms linear"
-    setTimeout(() => {
-      transitionVideo.current!.style.opacity = "0.0"
-      dnaRef.current!.style.transition = ""
-      setTimeout(() => {
-        disableScroll.off()
-        mixpanel.track("viewed company")
-      }, 600)
-    }, 600)
-    dnaRef.current!.style.transition = "opacity 600ms linear"
-    dnaRef.current!.style.opacity = "1.0"
-    initVideoScroll()
-  }
   const initTransition = () => {
     const listenForVideoEnd = () => {
       const id = setInterval(() => {
         if (transitionVideo.current && transitionVideo.current.currentTime >= 3.2) {
           transitionVideo.current.pause()
-          fadeContentIn()
+          backgroundWrapper.current!.style.visibility = "visible"
+          setTimeout(() => {
+            transitionVideo.current!.style.visibility = "hidden"
+          }, 1000)
+          initVideoScroll()
           clearInterval(id)
         }
       }, 10)
@@ -227,26 +197,66 @@ const Company = () => {
   }
 
   useEffect(() => {
+    // -1   – unstarted
+    //  0   – ended
+    //  1   – playing
+    //  2   – paused
+    //  3   – buffering
+    //  5   – video cued
+    switch (buellerState) {
+      case -1:
+        break;
+      case 0:
+        trackStopWatchingBueller(Page.Company)
+        break;
+      case 1:
+        trackStartWatchingBueller()
+        break;
+      case 2:
+        trackStopWatchingBueller(Page.Company)
+        break;
+      case 3:
+        trackStopWatchingBueller(Page.Company)
+        break;
+      case 5:
+        break
+    }
+  }, [buellerState])
+
+  useEffect(() => {
+    trackCompanyView()
+    dnaRef.current!.style.opacity = "0.0"
+    dnaRef.current!.style.transition = "opacity 600ms linear"
+    
     window.scrollTo(0,0)
-    disableScroll.on()
+    const handleScroll = () => {
+      window.scroll({top: 0, left: 0, behavior: 'smooth' })
+    }
+
+    window.addEventListener("scroll", handleScroll)
+    setTimeout(() => {
+      window.removeEventListener("scroll", handleScroll)
+    }, 3000)
+
+    return () => { window.removeEventListener("scroll", handleScroll) }
   }, [])
 
   return (
-    <Container ref={heightRef} >
-      <TransitionVideoWrapper>
-        <BackgroundVideo ref={transitionVideo} scale={0.8} src={companyTransition} onLoadedData={() => {
+    <Container ref={heightRef} bgWidth={1920} bgHeight={1440} bgScale={0.82} imageUrl={staticFrame}>
+      <TransitionVideoWrapper ref={transitionWrapper}>
+        <BackgroundVideo ref={transitionVideo} scale={0.82} src={companyTransition} onLoadedData={() => {
           setTimeout(() => {
-            imgRef.current!.style.display = "none"
+            transitionWrapper.current!.style.visibility = "visible"
+            transitionVideo.current!.playbackRate = 2.0
             initTransition()
           }, 60)
         }} />
       </TransitionVideoWrapper>
-      <BackgroundVideoWrapper>
+      <BackgroundVideoWrapper ref={backgroundWrapper}>
         <BackgroundVideo ref={videoRef} src={companyVideo} />
       </BackgroundVideoWrapper>
-      <Image ref={imgRef} imageUrl={staticFrame} />
-      <BackToSurfaceButton />
-      <ContentWrapper>
+      <BackToSurfaceButton onClick={() => { trackClickedBackToSurface(Page.Company) }} />
+      <ContentWrapper  >
         <ContentBlockWrapper1>
           <ContentBlock ref={dnaRef} title="DNA">
             <div>
@@ -309,6 +319,7 @@ const Company = () => {
         <ContentBlockWrapper2 top={(1042 * 2) + 1456} zIndex={15}>
           <ContentBlock ref={linksRef} title="News">
             <LinkWrapper>
+              <ThirdPartyLink href="https://aloom.medium.com/the-neon-ocean-35016cf2a4d9">Blog 6: “aloom-inated”</ThirdPartyLink>
               <ThirdPartyLink href="https://aloom.medium.com/aloom-inated-2b6ac871172f">Blog 5: “aloom-inated”</ThirdPartyLink>
               <ThirdPartyLink href="https://medium.com/@synaesthetic/synesthesia-to-day-1210d0e2858b">Blog 4: “Synesthesia, To-day”</ThirdPartyLink>
               <ThirdPartyLink href="https://www.mondo.nyc/2020-panels/hot-musictech-startups">aloom (synaesthetic) on the Mondo NYC Hot Startup Panel</ThirdPartyLink>
@@ -316,7 +327,6 @@ const Company = () => {
               <ThirdPartyLink href="https://musically.com/2020/09/18/startup-synaesthetic-seeks-artists-for-immersive-music/">aloom calls on musicians for its beta-testing program</ThirdPartyLink>
               <ThirdPartyLink href="https://medium.com/@synaesthetic/lets-rethink-virtual-reality-daad06313330?sk=18dcd4586fff13d6c13a18d92d6afffc">Blog 2: “Let’s Rethink Virtual Reality”</ThirdPartyLink>
               <ThirdPartyLink href="https://medium.com/@synaesthetic/the-synaesthetic-manifesto-f0f63c4b374a?sk=016df46ef7ab3db3bb7604a126a6cf20">Blog 1: “The Synaesthetic Manifesto”</ThirdPartyLink>
-              <ThirdPartyLink href="https://musically.com/2019/10/22/synaesthetic-to-blend-classical-music-ai-and-ar-technologies/">Our first paragraph online got free press!</ThirdPartyLink>
             </LinkWrapper>
           </ContentBlock>
         </ContentBlockWrapper2>
@@ -327,13 +337,13 @@ const Company = () => {
             </div>
           </ContentBlock>
         </ContentBlockWrapper2>
-        <ContentBlockWrapper3>
+        <ContentBlockWrapper3 ref={hide}>
           <EndScreenWrapper>
             <ButtonLinkWrapper>
-              <ButtonLink onClick={() => { mixpanel.track("clicked see product") }} to="product">See Product</ButtonLink>
-              <ButtonLink onClick={() => { mixpanel.track("clicked company go home") }} to="cross-roads">Go Home</ButtonLink>
+              <ButtonLink onClick={() => { trackClickedSeeProduct() }} to="product">See Product</ButtonLink>
+              <ButtonLink onClick={() => { trackClickedGoHome(Page.Company) }} to="cross-roads">Go Home</ButtonLink>
               <ScrollButton onClick={() => {
-                mixpanel.track("clicked company back to top")
+                trackClickedBackToTop(Page.Company)
                 window.scroll({top: 0, left: 0, behavior: 'smooth' })
               }}>Back To Top</ScrollButton>
             </ButtonLinkWrapper>
@@ -351,42 +361,40 @@ const Company = () => {
             </div>
           </EndScreenWrapper>
         </ContentBlockWrapper3>
-      </ContentWrapper>  
+      </ContentWrapper>
     </Container>
   )
 }
 
-const Container = styled.div`
-  width: 100vw;
-  height: 100vh;
-  position: relative;
-`
-interface ImageProps {
-  imageUrl?: string
+interface ContainerProps {
+  imageUrl: string
+  bgWidth: number
+  bgHeight: number
+  bgScale: number
 }
-const Image = styled.div<ImageProps>`
-  background-image: url(${props => props.imageUrl || null});
+const Container = styled.div<ContainerProps>`
+  background-image: url(${props => props.imageUrl});
   background-position: center;
   background-repeat: no-repeat;
-  background-color: black;
+  background-size: ${props => props.bgWidth * props.bgScale}px ${props => props.bgHeight * props.bgScale}px;
+
   width: 100vw;
-  height: 100vh;
-  position: absolute;
-  top: 0px;
-  left: 0px;
-  z-index: 20;
+  height: calc(100vh + 1px);
+  position: relative;
 `
 const TransitionVideoWrapper = styled.div`
   position: absolute;
   top: 0px;
   left: 0px;
   z-index: 6;
+  visibility: hidden;
 `
 const BackgroundVideoWrapper = styled.div`
   position: sticky;
   top: 0px;
   left: 0px;
   z-index: 5;
+  visibility: hidden;
 `
 
 const ContentWrapper = styled.div`
@@ -426,6 +434,7 @@ const ContentBlockWrapper3 = styled.div`
   position: absolute;
   bottom: 0px;
   z-index: 10;
+  display: none;
 `
 const ProfileCardWrapper = styled.div`
   display: grid;
@@ -472,9 +481,8 @@ const ContentBlock = React.forwardRef<HTMLDivElement, ContentBlockProps>(({ titl
   return (
     <ContentBlockContainer ref={ref}>
       { children }
-      <h1 style={{
+      <h1 className="contentHeaders" style={{
         width: "100%",
-        margin: "60px auto",
         color: "white",
         fontSize: "38px",
         letterSpacing: "4px",
@@ -496,4 +504,4 @@ const ContentBlockContainer = styled.div`
   opacity: 0.0;
 `
 
-export default Company
+export default AltCompany
