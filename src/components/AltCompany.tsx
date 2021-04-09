@@ -269,7 +269,7 @@ const AltCompany = () => {
         </ContentBlockWrapper1>
         <ContentBlockWrapper2 top={1456}>
           <ContentBlock ref={foundersRef} title="Founders">
-            <ProfileCardWrapper>
+            <ProfileCardWrapper className="profileCardWrapper">
               <ProfileCard
                 imgSrc={samim}
                 name={"Samim Safaei"}
@@ -294,7 +294,7 @@ const AltCompany = () => {
         </ContentBlockWrapper2>
         <ContentBlockWrapper2 top={1042 + 1456}>
           <ContentBlock ref={advisorsRef} title="Advisors">
-            <ProfileCardWrapper>
+            <ProfileCardWrapper className="profileCardWrapper">
               <ProfileCard
                 imgSrc={will}
                 name={"Will Mills"}
