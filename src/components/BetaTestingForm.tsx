@@ -40,7 +40,7 @@ const BetaTestingForm = () => {
   }
 
   return (
-    <Form heading={header} buttonText="Submit" onSubmit={() => { handleSubmit() }}>
+    <Form heading={header} subheading="(Only for professionals in music, gaming & wellness)" buttonText="Submit" onSubmit={() => { handleSubmit() }}>
       <Input
         error={nameError}
         type="text"

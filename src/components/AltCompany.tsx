@@ -320,7 +320,7 @@ const AltCompany = () => {
         <ContentBlockWrapper2 top={(1042 * 2) + 1456} zIndex={15}>
           <ContentBlock ref={linksRef} title="News">
             <LinkWrapper>
-              <ThirdPartyLink href="https://aloom.medium.com/the-neon-ocean-35016cf2a4d9">Blog 6: “aloom-inated”</ThirdPartyLink>
+              <ThirdPartyLink href="https://aloom.medium.com/the-neon-ocean-35016cf2a4d9">Blog 6: “The Neon Ocean”</ThirdPartyLink>
               <ThirdPartyLink href="https://aloom.medium.com/aloom-inated-2b6ac871172f">Blog 5: “aloom-inated”</ThirdPartyLink>
               <ThirdPartyLink href="https://medium.com/@synaesthetic/synesthesia-to-day-1210d0e2858b">Blog 4: “Synesthesia, To-day”</ThirdPartyLink>
               <ThirdPartyLink href="https://www.mondo.nyc/2020-panels/hot-musictech-startups">aloom (synaesthetic) on the Mondo NYC Hot Startup Panel</ThirdPartyLink>
@@ -333,9 +333,6 @@ const AltCompany = () => {
         </ContentBlockWrapper2>
         <ContentBlockWrapper2 top={(1042 * 3) + 1456}>
           <ContentBlock ref={contactRef} title="Contact">
-            {/* <div style={{backgroundColor: "black", width: "340px", marginBottom: "20px", borderRadius: "20px"}}>
-              <p style={{color: "white", padding: "20px"}}>Contact Us! (Coming Soon)</p>
-            </div> */}
             <ContactForm />
           </ContentBlock>
         </ContentBlockWrapper2>

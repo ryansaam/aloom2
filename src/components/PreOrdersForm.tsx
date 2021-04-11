@@ -10,7 +10,7 @@ const PreOrdersForm = () => {
   const [emailValue, setEmailValue] = useState("")
   const [nameError, setNameError] = useState(false)
   const [emailError, setEmailError] = useState(false)
-  const [header, setHeader] = useState("Pre Orders Waitlist")
+  const [header, setHeader] = useState("Pre-Orders")
 
   const handleSubmit = () => {
     setNameError(true)
@@ -40,7 +40,7 @@ const PreOrdersForm = () => {
   }
 
   return (
-    <Form heading={header} buttonText="Submit" onSubmit={() => { handleSubmit() }}>
+    <Form heading={header} subheading="(Early customer discount, with no-commitment)" buttonText="Submit" onSubmit={() => { handleSubmit() }}>
       <Input
         error={nameError}
         type="text"

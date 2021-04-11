@@ -307,7 +307,7 @@ const AltProduct = () => {
           </ContentBlock>
         </ContentBlockWrapper2>
         <ContentBlockWrapper2 top={1042 + 1456} zIndex={20}>
-          <ContentBlock ref={signUpRef} title="Sign Up">
+          <ContentBlock ref={signUpRef} title="">
             <div>
               <ContentBlockP>
                 Be among the first to experience aloom
@@ -490,14 +490,21 @@ interface ContentBlockProps {
 const ContentBlock = React.forwardRef<HTMLDivElement, ContentBlockProps>(({ title, children }, ref) => {
   return (
     <ContentBlockContainer ref={ref}>
-      <h1 className="contentHeaders" style={{
-        width: "100%",
-        color: "white",
-        fontSize: "38px",
-        letterSpacing: "4px",
-        position: "absolute",
-        top: "0px"
-      }}>{ title }</h1>
+      {
+        title !== ""
+        ? <h1 className="contentHeaders"
+            style={{
+              width: "100%",
+              color: "white",
+              fontSize: "38px",
+              letterSpacing: "4px",
+              position: "absolute",
+              top: "0px"
+            }}
+          >{ title }</h1>
+        : null
+      }
+
       { children }
     </ContentBlockContainer>
   )

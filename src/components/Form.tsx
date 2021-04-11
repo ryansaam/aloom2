@@ -3,14 +3,18 @@ import styled from 'styled-components'
 
 interface FormProps {
   heading: string
+  subheading?: string
   buttonText: string
   children: React.ReactNode
   onSubmit: () => void
 }
-const Form = ({ heading, buttonText, children, onSubmit }: FormProps) => {
+const Form = ({ heading, subheading, buttonText, children, onSubmit }: FormProps) => {
   return (
     <Container>
-      <h1 style={{color: "white"}}>{ heading }</h1>
+      <div>
+        <h1 style={{color: "white", margin: "0px auto"}}>{ heading }</h1>
+        { subheading ? <h5 style={{color: "white", margin: "0px auto", textAlign: "center"}}>{ subheading }</h5> : null }
+      </div>
       { children }
       <FormButton onClick={() => { onSubmit() }}>{ buttonText }</FormButton>
     </Container>
