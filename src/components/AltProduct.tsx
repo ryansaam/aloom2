@@ -11,6 +11,8 @@ import ContentBlockP from "./ContentBlockP"
 import ThirdPartyLink from "./ThirdPartyLink"
 import ButtonLink from "./ButtonLink"
 import BackToSurfaceButton from "./BackToSurfaceButton"
+import PreOrdersForm from "./PreOrdersForm"
+import BetaTestingForm from "./BetaTestingForm"
 import {
   Page,
   trackClickedBackToSurface,
@@ -304,19 +306,15 @@ const AltProduct = () => {
             />
           </ContentBlock>
         </ContentBlockWrapper2>
-        <ContentBlockWrapper2 top={1042 + 1456}>
+        <ContentBlockWrapper2 top={1042 + 1456} zIndex={20}>
           <ContentBlock ref={signUpRef} title="Sign Up">
             <div>
               <ContentBlockP>
                 Be among the first to experience aloom
               </ContentBlockP>
               <div style={{display: "grid", gridTemplateColumns: "auto auto", gap: "20px"}}>
-                <div style={{backgroundColor: "black", width: "340px", marginBottom: "20px", borderRadius: "20px"}}>
-                  <p style={{color: "white", padding: "20px"}}>Beta-testing for creators (Coming Soon)</p>
-                </div>
-                <div style={{backgroundColor: "black", width: "340px", marginBottom: "20px", borderRadius: "20px"}}>
-                  <p style={{color: "white", padding: "20px"}}>Customer pre-orders (Coming Soon)</p>
-                </div>
+                <BetaTestingForm />
+                <PreOrdersForm />
               </div>
             </div>
           </ContentBlock>

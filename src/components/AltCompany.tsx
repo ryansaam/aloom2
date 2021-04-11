@@ -12,6 +12,7 @@ import ProfileCard from "./ProfileCard"
 import ThirdPartyLink from "./ThirdPartyLink"
 import ButtonLink from "./ButtonLink"
 import BackToSurfaceButton from "./BackToSurfaceButton"
+import ContactForm from "./ContactForm"
 import {
   Page,
   trackClickedBackToSurface,
@@ -332,9 +333,10 @@ const AltCompany = () => {
         </ContentBlockWrapper2>
         <ContentBlockWrapper2 top={(1042 * 3) + 1456}>
           <ContentBlock ref={contactRef} title="Contact">
-            <div style={{backgroundColor: "black", width: "340px", marginBottom: "20px", borderRadius: "20px"}}>
+            {/* <div style={{backgroundColor: "black", width: "340px", marginBottom: "20px", borderRadius: "20px"}}>
               <p style={{color: "white", padding: "20px"}}>Contact Us! (Coming Soon)</p>
-            </div>
+            </div> */}
+            <ContactForm />
           </ContentBlock>
         </ContentBlockWrapper2>
         <ContentBlockWrapper3 ref={hide}>

@@ -11,6 +11,11 @@ enum DeviceType {
   Desktop = "desktop",
   Mobile = "mobile"
 }
+enum RegisterFor {
+  PreOrder = "pre order",
+  BetaTesting = "beta testing",
+  Contact = "contact"
+}
 
 interface Company_Do_Once {
   viewed_DNA: boolean
@@ -103,6 +108,12 @@ const trackStartWatchingBueller = () => {
 const trackStopWatchingBueller = (page: Page) => {
   mixpanel.track("watching bueller video", {"page": page})
 }
+const registerProfile = (email: string, name: string, registeredFor: RegisterFor) => {
+  mixpanel.identify(email)
+  mixpanel.people.set({ "$email": email })
+  mixpanel.people.set({ "$name": name })
+  mixpanel.people.append({ "registered for": registeredFor })
+}
 ///////////////////
 
 
@@ -136,6 +147,7 @@ export {
   initMixpanel,
   Page,
   DeviceType,
+  RegisterFor,
   track_DNA_View,
   trackFoundersView,
   trackAdvisorsView,
@@ -161,5 +173,6 @@ export {
   trackClickedGoHome,
   trackClickedBackToTop,
   trackVisitedSite,
-  trackProductView
+  trackProductView,
+  registerProfile
 }
