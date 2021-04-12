@@ -292,7 +292,7 @@ const AltProduct = () => {
             </div>
           </ContentBlock>
         </ContentBlockWrapper1>
-        <ContentBlockWrapper2 top={1456} zIndex={15}>
+        <ContentBlockWrapper2 top={1456} zIndex={25}>
           <ContentBlock ref={demoRef} title="Overview">
             <YouTube
               videoId={"ZkmyKHz1WGQ"}
