@@ -21,7 +21,7 @@ function App() {
   return (
     <Router>
       <Switch>
-        <Route path="/cross-roads">
+        <Route path="/home">
           <CrossRoads />
         </Route>
         <Route path="/company">

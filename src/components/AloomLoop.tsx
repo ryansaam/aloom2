@@ -23,6 +23,7 @@ const AloomLoop = () => {
       const id = setInterval(() => {
         if (aloomVideoRef!.current!.ended) {
           aloomTransitionWrapper.current!.style.visibility = "hidden"
+          diveVideoRef.current!.playbackRate = 1.5
           diveVideoRef.current!.play()
           clearInterval(id)
         }
@@ -57,7 +58,7 @@ const AloomLoop = () => {
   const listenForVideoEnd = () => {
     const id = setInterval(() => {
       if (diveVideoRef.current && diveVideoRef.current.ended) {
-        history.push("cross-roads")
+        history.push("home")
         clearInterval(id)
       }
     }, 10)

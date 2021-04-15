@@ -13,6 +13,7 @@ import ThirdPartyLink from "./ThirdPartyLink"
 import ButtonLink from "./ButtonLink"
 import BackToSurfaceButton from "./BackToSurfaceButton"
 import ContactForm from "./ContactForm"
+import PageMap from "./PageMap"
 import {
   Page,
   trackClickedBackToSurface,
@@ -48,6 +49,7 @@ const AltCompany = () => {
   const videoRef = useRef<HTMLVideoElement>(null)
   const backgroundWrapper = useRef<HTMLDivElement>(null)
   const [buellerState, setBuellerState] = useState<number | null>(null)
+  const [viewedContent, setViewedContent] = useState<boolean[]>([false, false, false, false, false, false])
 
   // content section refs
   const dnaRef = useRef<HTMLDivElement>(null)
@@ -61,6 +63,7 @@ const AltCompany = () => {
   const setViewableContent = (frameNumber: number, actions: CompanyDoOnce) => {
     if (frameNumber <= 42) {
       if (dnaRef.current) dnaRef.current.style.opacity = "1.0"
+      setViewedContent([true, false, false, false, false, false])
       if (!actions.viewed_DNA) {
         setTimeout(() => {
           if (dnaRef.current) dnaRef.current.style.transition = ""
@@ -71,8 +74,9 @@ const AltCompany = () => {
     } else {
       if (dnaRef.current) dnaRef.current.style.opacity = "0.0"
     }
-    if (frameNumber >= 50 && frameNumber <= 63) {
-      if (foundersRef.current) foundersRef.current.style.opacity = getOpacity(50, 63, frameNumber)
+    if (frameNumber >= 44 && frameNumber <= 63) {
+      if (foundersRef.current) foundersRef.current.style.opacity = getOpacity(44, 63, frameNumber)
+      setViewedContent([false, true, false, false, false, false])
       if (!actions.viewedFounders) {
         actions.viewedFounders = true
         trackFoundersView()
@@ -80,8 +84,9 @@ const AltCompany = () => {
     } else {
       if (foundersRef.current) foundersRef.current.style.opacity = "0.0"
     }
-    if (frameNumber >= 72 && frameNumber <= 84) {
-      if (advisorsRef.current) advisorsRef.current.style.opacity = getOpacity(72, 84, frameNumber)
+    if (frameNumber >= 65 && frameNumber <= 84) {
+      if (advisorsRef.current) advisorsRef.current.style.opacity = getOpacity(65, 84, frameNumber)
+      setViewedContent([false, false, true, false, false, false])
       if (!actions.viewedAdvisors) {
         actions.viewedAdvisors = true
         trackAdvisorsView()
@@ -89,9 +94,10 @@ const AltCompany = () => {
     } else {
       if (advisorsRef.current) advisorsRef.current.style.opacity = "0.0"
     }
-    if (frameNumber >= 93 && frameNumber <= 105) {
+    if (frameNumber >= 86 && frameNumber <= 105) {
       if (linksRef.current) linksRef.current.style.display = "grid"
-      if (linksRef.current) linksRef.current.style.opacity = getOpacity(93, 105, frameNumber)
+      if (linksRef.current) linksRef.current.style.opacity = getOpacity(86, 105, frameNumber)
+      setViewedContent([false, false, false, true, false, false])
       if (!actions.viewedNews) {
         actions.viewedNews = true
         trackNewsView()
@@ -100,8 +106,9 @@ const AltCompany = () => {
       if (linksRef.current) linksRef.current.style.display = "none"
       if (linksRef.current) linksRef.current.style.opacity = "0.0"
     }
-    if (frameNumber >= 114 && frameNumber <= 126) {
-      if (contactRef.current) contactRef.current.style.opacity = getOpacity(114, 126, frameNumber)
+    if (frameNumber >= 107 && frameNumber <= 126) {
+      if (contactRef.current) contactRef.current.style.opacity = getOpacity(107, 126, frameNumber)
+      setViewedContent([false, false, false, false, true, false])
       if (!actions.viewedContact) {
         actions.viewedContact = true
         trackContactView()
@@ -111,6 +118,7 @@ const AltCompany = () => {
     }
     let timeoutId = window.setTimeout(() => {})
     if (frameNumber >= 138) {
+      setViewedContent([false, false, false, false, false, true])
       if (!actions.viewedContact) {
         actions.viewedEndScreen = true
         trackEndScreenView(Page.Company)
@@ -256,19 +264,44 @@ const AltCompany = () => {
       <BackgroundVideoWrapper ref={backgroundWrapper}>
         <BackgroundVideo ref={videoRef} src={companyVideo} />
       </BackgroundVideoWrapper>
-      <BackToSurfaceButton onClick={() => { trackClickedBackToSurface(Page.Company) }} />
+      <BackToSurfaceButton
+        companyLinks={
+          <PageMap
+            anchorIds={["slide-1", "slide-2", "slide-3", "slide-4", "slide-5"]}
+            anchorNames={["DNA", "Founders", "Advisors", "News", "Contact"]}
+            anchorsReached={viewedContent}
+          />
+        }
+        onClick={() => { trackClickedBackToSurface(Page.Company) }}
+      />
+
       <ContentWrapper  >
-        <ContentBlockWrapper1>
-          <ContentBlock ref={dnaRef} title="DNA">
+        <ContentBlockWrapper1 id="slide-1">
+          <ContentBlock ref={dnaRef} title="DNA" id="slide-height">
             <div>
               <ContentBlockP>We help people feel more.</ContentBlockP>
               <p className="contentBlockP" style={{margin: "20px 0px 0px 0px", opacity: 0.8}}>By visualizing the emotion in audio,</p>
               <p className="contentBlockP" style={{margin: "0px 0px 20px 0px", opacity: 0.8}}>we make multimedia more engaging.</p>
-              <ContentBlockP opacity={0.6}>Ultimately, we are pioneering human perception technologies.</ContentBlockP>            
+              <ContentBlockP opacity={0.6}>Ultimately, we are pioneering human perception technologies.</ContentBlockP>
+              <div  className="bounce-effect" style={{
+                position: "absolute",
+                left: "50%",
+                marginLeft: "-70px",
+                bottom: "0px",
+                marginBottom: "20px",
+                zIndex: 20
+              }}>
+                <span style={{
+                  color: "white",
+                  fontSize: "20px",
+                  fontWeight: 600,
+                  letterSpacing: "4px"
+                }}>swim down</span>
+              </div>      
             </div>
           </ContentBlock>
         </ContentBlockWrapper1>
-        <ContentBlockWrapper2 top={1456}>
+        <ContentBlockWrapper2 top={1456} id="slide-2">
           <ContentBlock ref={foundersRef} title="Founders">
             <ProfileCardWrapper className="profileCardWrapper">
               <ProfileCard
@@ -293,7 +326,7 @@ const AltCompany = () => {
             </ProfileCardWrapper>
           </ContentBlock>
         </ContentBlockWrapper2>
-        <ContentBlockWrapper2 top={1042 + 1456}>
+        <ContentBlockWrapper2 top={1042 + 1456} id="slide-3">
           <ContentBlock ref={advisorsRef} title="Advisors">
             <ProfileCardWrapper className="profileCardWrapper">
               <ProfileCard
@@ -317,7 +350,7 @@ const AltCompany = () => {
             </ProfileCardWrapper>
           </ContentBlock>
         </ContentBlockWrapper2>
-        <ContentBlockWrapper2 top={(1042 * 2) + 1456} zIndex={15}>
+        <ContentBlockWrapper2 top={(1042 * 2) + 1456} zIndex={15} id="slide-4">
           <ContentBlock ref={linksRef} title="News">
             <LinkWrapper>
               <ThirdPartyLink href="https://aloom.medium.com/the-neon-ocean-35016cf2a4d9">Blog 6: “The Neon Ocean”</ThirdPartyLink>
@@ -331,16 +364,16 @@ const AltCompany = () => {
             </LinkWrapper>
           </ContentBlock>
         </ContentBlockWrapper2>
-        <ContentBlockWrapper2 top={(1042 * 3) + 1456}>
+        <ContentBlockWrapper2 top={(1042 * 3) + 1456} id="slide-5">
           <ContentBlock ref={contactRef} title="Contact">
             <ContactForm />
           </ContentBlock>
         </ContentBlockWrapper2>
-        <ContentBlockWrapper3 ref={hide}>
+        <ContentBlockWrapper3 ref={hide} id="slide-6">
           <EndScreenWrapper>
             <ButtonLinkWrapper>
               <ButtonLink onClick={() => { trackClickedSeeProduct() }} to="product">See Product</ButtonLink>
-              <ButtonLink onClick={() => { trackClickedGoHome(Page.Company) }} to="cross-roads">Go Home</ButtonLink>
+              <ButtonLink onClick={() => { trackClickedGoHome(Page.Company) }} to="home">Go Home</ButtonLink>
               <ScrollButton onClick={() => {
                 trackClickedBackToTop(Page.Company)
                 window.scroll({top: 0, left: 0, behavior: 'smooth' })
@@ -473,12 +506,13 @@ const ScrollButton = styled.button`
 
 
 interface ContentBlockProps {
+  id?: string
   title: string
   children: React.ReactNode
 }
-const ContentBlock = React.forwardRef<HTMLDivElement, ContentBlockProps>(({ title, children }, ref) => {
+const ContentBlock = React.forwardRef<HTMLDivElement, ContentBlockProps>(({ id, title, children }, ref) => {
   return (
-    <ContentBlockContainer ref={ref}>
+    <ContentBlockContainer ref={ref} id={id}>
       { children }
       <h1 className="contentHeaders" style={{
         width: "100%",

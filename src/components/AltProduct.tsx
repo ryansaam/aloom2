@@ -13,6 +13,7 @@ import ButtonLink from "./ButtonLink"
 import BackToSurfaceButton from "./BackToSurfaceButton"
 import PreOrdersForm from "./PreOrdersForm"
 import BetaTestingForm from "./BetaTestingForm"
+import PageMap from "./PageMap"
 import {
   Page,
   trackClickedBackToSurface,
@@ -45,6 +46,7 @@ const AltProduct = () => {
 
   const [playerState, setPlayerState] = useState<number | null>(null)
   const [buellerState, setBuellerState] = useState<number | null>(null)
+  const [viewedContent, setViewedContent] = useState<boolean[]>([false, false, false, false, false, false])
 
   // content section refs
   const overviewRef = useRef<HTMLDivElement>(null)
@@ -58,6 +60,7 @@ const AltProduct = () => {
   const setViewableContent = (frameNumber: number, actions: ProductDoOnce) => {
     if (frameNumber <= 42) {
       if (overviewRef.current) overviewRef.current.style.opacity = "1.0"
+      setViewedContent([true, false, false, false, false, false])
       if (!actions.viewedOverview) {
         setTimeout(() => {
           if (overviewRef.current) overviewRef.current.style.transition = ""
@@ -68,8 +71,9 @@ const AltProduct = () => {
     } else {
       if (overviewRef.current) overviewRef.current.style.opacity = "0.0"
     }
-    if (frameNumber >= 50 && frameNumber <= 63) {
-      if (demoRef.current) demoRef.current.style.opacity = getOpacity(50, 63, frameNumber)
+    if (frameNumber >= 44 && frameNumber <= 63) {
+      if (demoRef.current) demoRef.current.style.opacity = getOpacity(44, 63, frameNumber)
+      setViewedContent([false, true, false, false, false, false])
       if (!actions.viewedDemo) {
         actions.viewedDemo = true
         trackDemoView()
@@ -77,8 +81,9 @@ const AltProduct = () => {
     } else {
       if (demoRef.current) demoRef.current.style.opacity = "0.0"
     }
-    if (frameNumber >= 72 && frameNumber <= 84) {
-      if (signUpRef.current) signUpRef.current.style.opacity = getOpacity(72, 84, frameNumber)
+    if (frameNumber >= 65 && frameNumber <= 84) {
+      if (signUpRef.current) signUpRef.current.style.opacity = getOpacity(65, 84, frameNumber)
+      setViewedContent([false, false, true, false, false, false])
       if (!actions.viewedSignUp) {
         actions.viewedSignUp = true
         trackSignUpView()
@@ -86,8 +91,9 @@ const AltProduct = () => {
     } else {
       if (signUpRef.current) signUpRef.current.style.opacity = "0.0"
     }
-    if (frameNumber >= 93 && frameNumber <= 105) {
-      if (techRef.current) techRef.current.style.opacity = getOpacity(93, 105, frameNumber)
+    if (frameNumber >= 86 && frameNumber <= 105) {
+      if (techRef.current) techRef.current.style.opacity = getOpacity(86, 105, frameNumber)
+      setViewedContent([false, false, false, true, false, false])
       if (!actions.viewedTech) {
         actions.viewedTech = true
         trackTechView()
@@ -95,8 +101,9 @@ const AltProduct = () => {
     } else {
       if (techRef.current) techRef.current.style.opacity = "0.0"
     }
-    if (frameNumber >= 114 && frameNumber <= 126) {
-      if (exploreRef.current) exploreRef.current.style.opacity = getOpacity(114, 126, frameNumber)
+    if (frameNumber >= 107 && frameNumber <= 126) {
+      if (exploreRef.current) exploreRef.current.style.opacity = getOpacity(107, 126, frameNumber)
+      setViewedContent([false, false, false, false, true, false])
       if (!actions.viewedExplore) {
         actions.viewedExplore = true
         trackExploreView()
@@ -106,6 +113,7 @@ const AltProduct = () => {
     }
     let timeoutId = window.setTimeout(() => {})
     if (frameNumber >= 138) {
+      setViewedContent([false, false, false, false, false, true])
       if (!actions.viewedEndScreen) {
         actions.viewedEndScreen = true
         trackEndScreenView(Page.Product)
@@ -278,10 +286,20 @@ const AltProduct = () => {
       <BackgroundVideoWrapper ref={backgroundWrapper}>
         <BackgroundVideo ref={videoRef} src={productVideo} />
       </BackgroundVideoWrapper>
-      <BackToSurfaceButton onClick={() => { trackClickedBackToSurface(Page.Product) }} />
+      <BackToSurfaceButton
+        productLinks={
+          <PageMap
+            anchorIds={["slide-1", "slide-2", "slide-3", "slide-4", "slide-5"]}
+            anchorNames={["Intro", "Overview", "Sign Up", "Our Tech", "Explore"]}
+            anchorsReached={viewedContent}
+          />
+        }
+        onClick={() => { trackClickedBackToSurface(Page.Product) }}
+      />
+
       <ContentWrapper>
-        <ContentBlockWrapper1>
-          <ContentBlock ref={overviewRef} title="“audio illuminated”">
+        <ContentBlockWrapper1 id="slide-1">
+          <ContentBlock ref={overviewRef} title="“audio illuminated”" id="slide-height">
             <div style={{boxSizing: "border-box", padding: "10%"}}>
               <ContentBlockP>
                 Our smart light visualizes the emotion in audio to create more engaging experiences, controlled by our app.
@@ -289,10 +307,25 @@ const AltProduct = () => {
               <ContentBlockP opacity={0.8}>
                 Using neuroscience, we create content-tailored visual ambiance. This multi-sensory immersion helps you feel more connected to the moment.
               </ContentBlockP>
+              <div  className="bounce-effect" style={{
+                position: "absolute",
+                left: "50%",
+                marginLeft: "-70px",
+                bottom: "0px",
+                marginBottom: "20px",
+                zIndex: 20
+              }}>
+                <span style={{
+                  color: "white",
+                  fontSize: "20px",
+                  fontWeight: 600,
+                  letterSpacing: "4px"
+                }}>swim down</span>
+              </div> 
             </div>
           </ContentBlock>
         </ContentBlockWrapper1>
-        <ContentBlockWrapper2 top={1456} zIndex={25}>
+        <ContentBlockWrapper2 top={1456} zIndex={25} id="slide-2">
           <ContentBlock ref={demoRef} title="Overview">
             <YouTube
               videoId={"ZkmyKHz1WGQ"}
@@ -306,12 +339,9 @@ const AltProduct = () => {
             />
           </ContentBlock>
         </ContentBlockWrapper2>
-        <ContentBlockWrapper2 top={1042 + 1456} zIndex={20}>
-          <ContentBlock ref={signUpRef} title="">
+        <ContentBlockWrapper2 top={1042 + 1456} zIndex={20} id="slide-3">
+          <ContentBlock ref={signUpRef} title="Be among the first to experience aloom">
             <div>
-              <ContentBlockP>
-                Be among the first to experience aloom
-              </ContentBlockP>
               <div style={{display: "grid", gridTemplateColumns: "auto auto", gap: "20px"}}>
                 <BetaTestingForm />
                 <PreOrdersForm />
@@ -319,7 +349,7 @@ const AltProduct = () => {
             </div>
           </ContentBlock>
         </ContentBlockWrapper2>
-        <ContentBlockWrapper2 top={(1042 * 2) + 1456} >
+        <ContentBlockWrapper2 top={(1042 * 2) + 1456} id="slide-4">
           <ContentBlock ref={techRef} title="Our Tech">
             <div style={{boxSizing: "border-box", padding: "0% 10%"}}>
               <ContentBlockP>
@@ -334,7 +364,7 @@ const AltProduct = () => {
             </div>
           </ContentBlock>
         </ContentBlockWrapper2>
-        <ContentBlockWrapper2 top={(1042 * 3) + 1456}>
+        <ContentBlockWrapper2 top={(1042 * 3) + 1456} id="slide-5">
           <ContentBlock ref={exploreRef} title="Explore Synesthesia">
             <LinkWrapper>
               <ThirdPartyLink href="https://thepsychologist.bps.org.uk/volume-28/february-2015/surprising-world-synaesthesia">The surprising world of Synesthesia</ThirdPartyLink>
@@ -352,11 +382,11 @@ const AltProduct = () => {
             </LinkWrapper>
           </ContentBlock>
         </ContentBlockWrapper2>
-        <ContentBlockWrapper3 ref={hide}>
+        <ContentBlockWrapper3 ref={hide} id="slide-6">
           <EndScreenWrapper>
             <ButtonLinkWrapper>
               <ButtonLink onClick={() => { trackClickedSeeCompany() }} to="company">See Company</ButtonLink>
-              <ButtonLink onClick={() => { trackClickedGoHome(Page.Product) }} to="cross-roads">Go Home</ButtonLink>
+              <ButtonLink onClick={() => { trackClickedGoHome(Page.Product) }} to="home">Go Home</ButtonLink>
               <ScrollButton onClick={() => {
                 trackClickedBackToTop(Page.Product)
                 window.scroll({top: 0, left: 0, behavior: 'smooth' })
@@ -484,12 +514,13 @@ const ScrollButton = styled.button`
 `
 
 interface ContentBlockProps {
+  id?: string
   title: string
   children: React.ReactNode
 }
-const ContentBlock = React.forwardRef<HTMLDivElement, ContentBlockProps>(({ title, children }, ref) => {
+const ContentBlock = React.forwardRef<HTMLDivElement, ContentBlockProps>(({ id, title, children }, ref) => {
   return (
-    <ContentBlockContainer ref={ref}>
+    <ContentBlockContainer ref={ref} id={id}>
       {
         title !== ""
         ? <h1 className="contentHeaders"
