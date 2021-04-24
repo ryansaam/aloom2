@@ -33,7 +33,6 @@ import {
 } from "./mixpanelAPI"
 
 import samim from "../assets/samim.jpeg"
-import shin from "../assets/shin_headshot.png"
 import ryansam from "../assets/ryansam_profile.jpeg"
 import will from "../assets/will_mills.jpeg"
 import sean from "../assets/sean_mcgrail.jpeg"
@@ -303,18 +302,12 @@ const AltCompany = () => {
         </ContentBlockWrapper1>
         <ContentBlockWrapper2 top={1456} id="slide-2">
           <ContentBlock ref={foundersRef} title="Founders">
-            <ProfileCardWrapper className="profileCardWrapper">
+            <ProfileCardWrapper className="profileCardWrapper" columns={2}>
               <ProfileCard
                 imgSrc={samim}
                 name={"Samim Safaei"}
                 title={"CEO"}
                 desc={"An experienced engineer, product manager and founder; striving to spread the power of immersive audio-visual experiences."}
-              />
-              <ProfileCard
-                imgSrc={shin}
-                name={"Shin Nagpal"}
-                title={"COO"}
-                desc={"A manufacturing expert with practical experience scaling audio hardware OEMs; he creates high-quality products with unique value."}
               />
               <ProfileCard
                 imgSrc={ryansam}
@@ -328,7 +321,7 @@ const AltCompany = () => {
         </ContentBlockWrapper2>
         <ContentBlockWrapper2 top={1042 + 1456} id="slide-3">
           <ContentBlock ref={advisorsRef} title="Advisors">
-            <ProfileCardWrapper className="profileCardWrapper">
+            <ProfileCardWrapper className="profileCardWrapper" columns={3}>
               <ProfileCard
                 imgSrc={will}
                 name={"Will Mills"}
@@ -468,9 +461,12 @@ const ContentBlockWrapper3 = styled.div`
   z-index: 10;
   display: none;
 `
-const ProfileCardWrapper = styled.div`
+interface ProfileCardWrapperProps {
+  columns: number
+}
+const ProfileCardWrapper = styled.div<ProfileCardWrapperProps>`
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns: repeat(${props => props.columns}, 1fr);
   gap: 20px;
 `
 const LinkWrapper = styled.div`
