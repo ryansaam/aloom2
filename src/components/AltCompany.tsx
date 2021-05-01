@@ -60,6 +60,7 @@ const AltCompany = () => {
   ///////////////////////
 
   const setViewableContent = (frameNumber: number, actions: CompanyDoOnce) => {
+    const offset = 16
     if (frameNumber <= 42) {
       if (dnaRef.current) dnaRef.current.style.opacity = "1.0"
       setViewedContent([true, false, false, false, false, false])
@@ -74,7 +75,7 @@ const AltCompany = () => {
       if (dnaRef.current) dnaRef.current.style.opacity = "0.0"
     }
     if (frameNumber >= 44 && frameNumber <= 63) {
-      if (foundersRef.current) foundersRef.current.style.opacity = getOpacity(44, 63, frameNumber)
+      if (foundersRef.current) foundersRef.current.style.opacity = getOpacity(44, 63 - offset, frameNumber)
       setViewedContent([false, true, false, false, false, false])
       if (!actions.viewedFounders) {
         actions.viewedFounders = true
@@ -84,7 +85,7 @@ const AltCompany = () => {
       if (foundersRef.current) foundersRef.current.style.opacity = "0.0"
     }
     if (frameNumber >= 65 && frameNumber <= 84) {
-      if (advisorsRef.current) advisorsRef.current.style.opacity = getOpacity(65, 84, frameNumber)
+      if (advisorsRef.current) advisorsRef.current.style.opacity = getOpacity(65, 84 - offset, frameNumber)
       setViewedContent([false, false, true, false, false, false])
       if (!actions.viewedAdvisors) {
         actions.viewedAdvisors = true
@@ -95,7 +96,7 @@ const AltCompany = () => {
     }
     if (frameNumber >= 86 && frameNumber <= 105) {
       if (linksRef.current) linksRef.current.style.display = "grid"
-      if (linksRef.current) linksRef.current.style.opacity = getOpacity(86, 105, frameNumber)
+      if (linksRef.current) linksRef.current.style.opacity = getOpacity(86, 105 - offset, frameNumber)
       setViewedContent([false, false, false, true, false, false])
       if (!actions.viewedNews) {
         actions.viewedNews = true
@@ -106,7 +107,7 @@ const AltCompany = () => {
       if (linksRef.current) linksRef.current.style.opacity = "0.0"
     }
     if (frameNumber >= 107 && frameNumber <= 126) {
-      if (contactRef.current) contactRef.current.style.opacity = getOpacity(107, 126, frameNumber)
+      if (contactRef.current) contactRef.current.style.opacity = getOpacity(107, 126 - offset, frameNumber)
       setViewedContent([false, false, false, false, true, false])
       if (!actions.viewedContact) {
         actions.viewedContact = true

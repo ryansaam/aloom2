@@ -58,6 +58,7 @@ const AltProduct = () => {
   ///////////////////////
 
   const setViewableContent = (frameNumber: number, actions: ProductDoOnce) => {
+    const offset = 16
     if (frameNumber <= 42) {
       if (overviewRef.current) overviewRef.current.style.opacity = "1.0"
       setViewedContent([true, false, false, false, false, false])
@@ -72,7 +73,7 @@ const AltProduct = () => {
       if (overviewRef.current) overviewRef.current.style.opacity = "0.0"
     }
     if (frameNumber >= 44 && frameNumber <= 63) {
-      if (demoRef.current) demoRef.current.style.opacity = getOpacity(44, 63, frameNumber)
+      if (demoRef.current) demoRef.current.style.opacity = getOpacity(44, 63 - offset, frameNumber)
       setViewedContent([false, true, false, false, false, false])
       if (!actions.viewedDemo) {
         actions.viewedDemo = true
@@ -82,7 +83,7 @@ const AltProduct = () => {
       if (demoRef.current) demoRef.current.style.opacity = "0.0"
     }
     if (frameNumber >= 65 && frameNumber <= 84) {
-      if (signUpRef.current) signUpRef.current.style.opacity = getOpacity(65, 84, frameNumber)
+      if (signUpRef.current) signUpRef.current.style.opacity = getOpacity(65, 84 - offset, frameNumber)
       setViewedContent([false, false, true, false, false, false])
       if (!actions.viewedSignUp) {
         actions.viewedSignUp = true
@@ -92,7 +93,7 @@ const AltProduct = () => {
       if (signUpRef.current) signUpRef.current.style.opacity = "0.0"
     }
     if (frameNumber >= 86 && frameNumber <= 105) {
-      if (techRef.current) techRef.current.style.opacity = getOpacity(86, 105, frameNumber)
+      if (techRef.current) techRef.current.style.opacity = getOpacity(86, 105 - offset, frameNumber)
       setViewedContent([false, false, false, true, false, false])
       if (!actions.viewedTech) {
         actions.viewedTech = true
@@ -102,7 +103,7 @@ const AltProduct = () => {
       if (techRef.current) techRef.current.style.opacity = "0.0"
     }
     if (frameNumber >= 107 && frameNumber <= 126) {
-      if (exploreRef.current) exploreRef.current.style.opacity = getOpacity(107, 126, frameNumber)
+      if (exploreRef.current) exploreRef.current.style.opacity = getOpacity(107, 126 - offset, frameNumber)
       setViewedContent([false, false, false, false, true, false])
       if (!actions.viewedExplore) {
         actions.viewedExplore = true
