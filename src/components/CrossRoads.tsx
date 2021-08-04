@@ -81,7 +81,7 @@ const CrossRoads = () => {
 
         <PWrapper>
           <p className="contentBlockP" style={{margin: "20px 0px"}}>
-            Aloom empowering music as a user engagement tool
+            aloom empowers music as a user engagement tool
           </p>
           <p className="contentBlockP" style={{margin: "20px 0px"}}>
             By pioneering "audio-first" VFX for video producers

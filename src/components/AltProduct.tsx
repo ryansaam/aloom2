@@ -306,7 +306,7 @@ const AltProduct = () => {
                 Our AR tech visualizes the emotion in audio, to create more engaging social media content.
               </ContentBlockP>
               <ContentBlockP opacity={0.8}>
-                Using neuroscience, we create content-tailored visual ambiance. This multi-sensory immersion helps you feel more connected to the moment.
+                Using neuroscience, we create audio-visual effects that help you feel more connected to the moment.
               </ContentBlockP>
               <div  className="bounce-effect" style={{
                 position: "absolute",
@@ -364,7 +364,7 @@ const AltProduct = () => {
           <ContentBlock ref={techRef} title="Our Tech">
             <div style={{boxSizing: "border-box", padding: "0% 10%"}}>
               <ContentBlockP>
-              We leverage Mixed Reality and Machine Learning technologies, to make magnetic, "sensory-woven" video UXs.
+                We leverage Mixed Reality and Machine Learning technologies, to make magnetic, "sensory-woven" video UXs.
               </ContentBlockP>
               <ContentBlockP opacity={0.8}>
                 But the magic of our UX comes from the neurological condition of Synesthesia - when your senses mix & trigger each other, like <i>seeing sounds</i>. These multi-sensory associations helped great artists from Van Gogh to Steve Wonder improve creativity, memory & focus. Some call it nature’s genius button.
