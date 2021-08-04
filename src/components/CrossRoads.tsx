@@ -81,13 +81,10 @@ const CrossRoads = () => {
 
         <PWrapper>
           <p className="contentBlockP" style={{margin: "20px 0px"}}>
-            aloom makes multimedia immersive.
+            Aloom empowering music as a user engagement tool
           </p>
-          <p className="contentBlockP" style={{opacity: 0.8, margin: "20px 0px"}}>
-            Our lights are a content platform that engage remote audiences better.
-          </p>
-          <p className="contentBlockP" style={{opacity: 0.6, margin: "20px 0px"}}>
-            We merge digital experiences with the home.
+          <p className="contentBlockP" style={{margin: "20px 0px"}}>
+            By pioneering "audio-first" VFX for video producers
           </p>
         </PWrapper> 
 

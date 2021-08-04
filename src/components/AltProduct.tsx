@@ -303,7 +303,7 @@ const AltProduct = () => {
           <ContentBlock ref={overviewRef} title="“audio illuminated”" id="slide-height">
             <div style={{boxSizing: "border-box", padding: "10%"}}>
               <ContentBlockP>
-                Our smart light visualizes the emotion in audio to create more engaging experiences, controlled by our app.
+                Our AR tech visualizes the emotion in audio, to create more engaging social media content.
               </ContentBlockP>
               <ContentBlockP opacity={0.8}>
                 Using neuroscience, we create content-tailored visual ambiance. This multi-sensory immersion helps you feel more connected to the moment.
@@ -327,8 +327,8 @@ const AltProduct = () => {
           </ContentBlock>
         </ContentBlockWrapper1>
         <ContentBlockWrapper2 top={1456} zIndex={25} id="slide-2">
-          <ContentBlock ref={demoRef} title="Overview">
-            <YouTube
+          <ContentBlock ref={demoRef} title="Demo">
+            {/* <YouTube
               videoId={"ZkmyKHz1WGQ"}
               opts={{
                 height: '409.5',
@@ -337,7 +337,17 @@ const AltProduct = () => {
               onStateChange={(event) => {
                 setPlayerState(event.data)
               }}
-            />
+            /> */}
+            <div style={{
+              backgroundColor: "white",
+              width: "728px",
+              height: "409.5px",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center"
+            }}>
+              <p className="contentBlockP" style={{color: "black"}}>Coming Soon :)</p>
+            </div>
           </ContentBlock>
         </ContentBlockWrapper2>
         <ContentBlockWrapper2 top={1042 + 1456} zIndex={20} id="slide-3">
@@ -354,10 +364,10 @@ const AltProduct = () => {
           <ContentBlock ref={techRef} title="Our Tech">
             <div style={{boxSizing: "border-box", padding: "0% 10%"}}>
               <ContentBlockP>
-                We leverage Internet of Things, Mixed Reality & Machine Learning technologies, in a unique architecture prioritizing UX & integrability.
+              We leverage Mixed Reality and Machine Learning technologies, to make magnetic, "sensory-woven" video UXs.
               </ContentBlockP>
               <ContentBlockP opacity={0.8}>
-                But the magic of our platform comes from the neurological condition of Synesthesia - when your senses mix & trigger each other, like <i>seeing sounds</i>. These multi-sensory associations helped great artists from Van Gogh to Steve Wonder improve creativity, memory & focus. Some call it nature’s genius button.
+                But the magic of our UX comes from the neurological condition of Synesthesia - when your senses mix & trigger each other, like <i>seeing sounds</i>. These multi-sensory associations helped great artists from Van Gogh to Steve Wonder improve creativity, memory & focus. Some call it nature’s genius button.
               </ContentBlockP>
               <ContentBlockP opacity={0.6}>
                 Best of all, it’s not just genetic & can be learned. We’ve coded this natural mechanism along with customization tools, for communal creativity towards collective transcendence.
